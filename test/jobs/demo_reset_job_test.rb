@@ -20,14 +20,17 @@ class DemoResetJobTest < ActiveJob::TestCase
     assert_not Account.exists?(existing_account.id)
     assert_not User.exists?(existing_user.id)
     assert_not Link.exists?(existing_link.id)
-    assert_equal 0, Visit.count
-    assert_equal 0, Tagging.count
     assert_equal 0, CustomDomain.count
     assert_equal 0, ApiToken.count
 
     demo_user = User.find_by(email: "demo@tinyslug.local")
     assert demo_user, "expected demo seed user to be restored"
     assert demo_user.account.links.exists?(slug: "demo-docs")
+
+    demo_link_ids = demo_user.account.links.ids
+    assert_operator Visit.count, :>, 0, "expected demo seed visits to be restored"
+    assert_equal 0, Visit.where.not(link_id: demo_link_ids).count
+    assert_equal 0, Tagging.where.not(link_id: demo_link_ids).count
   end
 
   test "removes orphaned tags left without an account" do
@@ -35,7 +38,9 @@ class DemoResetJobTest < ActiveJob::TestCase
 
     DemoResetJob.perform_now
 
-    assert_equal 0, Tag.count
+    demo_account = User.find_by!(email: "demo@tinyslug.local").account
+    assert_operator Tag.count, :>, 0, "expected demo seed tags to be restored"
+    assert_equal 0, Tag.where.not(account_id: demo_account.id).count
   end
 
   test "does nothing when demo mode is off" do

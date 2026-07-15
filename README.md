@@ -2,6 +2,16 @@
 
 tinyslug is a privacy-focused, self-hostable link manager built with Rails 8.1, Hotwire, Tailwind CSS, PostgreSQL, and Solid Queue. It provides short links, tags, QR codes, privacy-preserving analytics, custom domains, and an authenticated API.
 
+![tinyslug landing page with the headline "Cut the tracking. Keep the link." and a demo of a long tracking URL being trimmed](docs/images/home.png)
+
+## Screenshots
+
+![Links workspace listing short links with destinations, tags, copy buttons, and search and tag filters](docs/images/links.png)
+
+![Analytics dashboard showing total visits, unique daily visitors, and a 30-day visits-over-time line chart](docs/images/analytics.png)
+
+![Analytics breakdown tables ranking top links, countries, referrers, and browsers by visits](docs/images/analytics-tables.png)
+
 ## Requirements
 
 - [mise](https://mise.jdx.dev/)
@@ -29,7 +39,7 @@ For native PostgreSQL, ensure `pg_isready` succeeds and that your operating-syst
 
 Open <http://localhost:3000>. Development email is written to `tmp/mails`; open the newest HTML part to follow a confirmation or password-reset link.
 
-Optional idempotent demo data is available with `mise exec -- bin/rails db:seed`. It creates `demo@tinyslug.local` with the local-only password `demo-password-change-me` (override it with `SEED_DEMO_PASSWORD`).
+Optional idempotent demo data is available with `mise exec -- bin/rails db:seed`. It creates `demo@tinyslug.local` with the local-only password `demo-password-change-me` (override it with `SEED_DEMO_PASSWORD`), ten tagged sample links, and thirty days of privacy-safe visit history for the analytics dashboard.
 
 ## Validation
 
