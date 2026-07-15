@@ -49,6 +49,8 @@
       </nav>
     </header>
 
+    <%= render "shared/demo_banner" if demo_mode? %>
+
     <div id="flash-messages"><%= render "shared/flash" %></div>
 
     <main>

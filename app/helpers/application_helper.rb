@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def demo_mode?
+    Rails.configuration.x.demo_mode_enabled
+  end
+
   # Header nav link with hover/current-page underline states per the design spec.
   def nav_link_to(name, path, extra_class: nil)
     state =

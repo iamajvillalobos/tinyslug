@@ -1,4 +1,4 @@
-if Rails.env.production?
+if Rails.env.production? && !Rails.configuration.x.demo_mode_enabled
   puts "No production seed data is required."
 else
   demo_password = ENV.fetch("SEED_DEMO_PASSWORD", "demo-password-change-me")

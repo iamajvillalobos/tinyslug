@@ -21,6 +21,7 @@ module Tinyslug
     config.x.app_host = ENV.fetch("APP_HOST", Rails.env.production? ? nil : "localhost:3000")
     config.x.app_protocol = ENV.fetch("APP_PROTOCOL", Rails.env.production? ? "https" : "http")
     config.x.public_shortener_enabled = ActiveModel::Type::Boolean.new.cast(ENV.fetch("PUBLIC_SHORTENER_ENABLED", false))
+    config.x.demo_mode_enabled = ActiveModel::Type::Boolean.new.cast(ENV.fetch("DEMO_MODE_ENABLED", false))
     config.x.redirect_visit_retention_days = Integer(ENV.fetch("REDIRECT_VISIT_RETENTION_DAYS", 90), exception: false) || 90
     config.x.custom_domain_dns_target = ENV["CUSTOM_DOMAIN_DNS_TARGET"]
     config.x.custom_domain_txt_prefix = ENV.fetch("CUSTOM_DOMAIN_TXT_PREFIX", "_tinyslug-verification")

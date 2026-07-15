@@ -21,3 +21,7 @@ production:
     class: CustomDomainVerificationSweepJob
     queue: background
     schedule: every 30 minutes
+  reset_demo_data:
+    class: DemoResetJob
+    queue: background
+    schedule: at midnight every day
