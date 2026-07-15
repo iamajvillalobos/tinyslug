@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_121000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -111,6 +111,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
     t.check_constraint "source = ANY (ARRAY[0, 1, 2])", name: "links_source_check"
   end
 
+  create_table "profile_links", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "link_id", null: false
+    t.integer "position", null: false
+    t.bigint "profile_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["link_id"], name: "index_profile_links_on_link_id"
+    t.index ["profile_id", "link_id"], name: "index_profile_links_on_profile_id_and_link_id", unique: true
+    t.index ["profile_id", "position"], name: "index_profile_links_on_profile_id_and_position"
+    t.index ["profile_id"], name: "index_profile_links_on_profile_id"
+    t.check_constraint "\"position\" >= 0", name: "profile_links_position_check"
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.text "bio"
     t.datetime "created_at", null: false
@@ -124,6 +137,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
     t.check_constraint "char_length(bio) <= 500", name: "profiles_bio_length_check"
     t.check_constraint "char_length(first_name::text) <= 100", name: "profiles_first_name_length_check"
     t.check_constraint "char_length(last_name::text) <= 100", name: "profiles_last_name_length_check"
+  end
+
+  create_table "social_links", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "label", null: false
+    t.integer "position", null: false
+    t.bigint "profile_id", null: false
+    t.datetime "updated_at", null: false
+    t.text "url", null: false
+    t.index ["profile_id", "position"], name: "index_social_links_on_profile_id_and_position"
+    t.index ["profile_id"], name: "index_social_links_on_profile_id"
+    t.check_constraint "\"position\" >= 0", name: "social_links_position_check"
+    t.check_constraint "char_length(label::text) >= 1 AND char_length(label::text) <= 40", name: "social_links_label_length_check"
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -196,7 +222,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
   add_foreign_key "custom_domains", "accounts", on_delete: :cascade
   add_foreign_key "links", "accounts", on_delete: :cascade
   add_foreign_key "links", "custom_domains", on_delete: :nullify
+  add_foreign_key "profile_links", "links", on_delete: :cascade
+  add_foreign_key "profile_links", "profiles", on_delete: :cascade
   add_foreign_key "profiles", "users", on_delete: :cascade
+  add_foreign_key "social_links", "profiles", on_delete: :cascade
   add_foreign_key "taggings", "links", on_delete: :cascade
   add_foreign_key "taggings", "tags", on_delete: :cascade
   add_foreign_key "tags", "accounts", on_delete: :cascade

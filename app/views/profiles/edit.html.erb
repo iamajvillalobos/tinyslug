@@ -40,6 +40,70 @@
     <%= form.submit "Save profile", class: "rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 transition hover:bg-lime-200 disabled:cursor-wait disabled:opacity-60", data: { turbo_submits_with: "Saving…" } %>
   <% end %>
 
+  <section id="public-profile-links" class="mt-12 scroll-mt-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" aria-labelledby="public-profile-links-heading">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 id="public-profile-links-heading" class="text-2xl font-bold">Public profile links</h2>
+        <p class="mt-2 text-sm text-slate-400">Choose which of your short links appear publicly, then set their order.</p>
+      </div>
+      <%= link_to "View public profile", public_profile_path(current_user.username), class: "text-sm font-semibold text-lime-300 hover:text-lime-200" %>
+    </div>
+
+    <% if @profile.profile_links.any? %>
+      <ol class="mt-6 space-y-3">
+        <% @profile.profile_links.each_with_index do |profile_link, index| %>
+          <li class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/20 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0"><span class="font-semibold"><%= profile_link.link.name %></span><span class="mt-1 block truncate text-sm text-slate-500"><%= profile_link.link.short_url %></span></div>
+            <div class="flex items-center gap-2">
+              <%= button_to "Move up", move_up_profile_link_path(profile_link), method: :patch, disabled: index.zero?, class: "rounded-lg border border-white/15 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-35", form: { class: "inline" }, data: { turbo_submits_with: "Moving…" } %>
+              <%= button_to "Move down", move_down_profile_link_path(profile_link), method: :patch, disabled: index == @profile.profile_links.length - 1, class: "rounded-lg border border-white/15 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-35", form: { class: "inline" }, data: { turbo_submits_with: "Moving…" } %>
+              <%= button_to "Remove", profile_link_path(profile_link), method: :delete, class: "rounded-lg px-3 py-2 text-sm text-rose-300 hover:bg-rose-300/10", form: { class: "inline" }, data: { turbo_confirm: "Remove this link from your public profile?", turbo_submits_with: "Removing…" } %>
+            </div>
+          </li>
+        <% end %>
+      </ol>
+    <% else %>
+      <p class="mt-6 rounded-2xl border border-dashed border-white/15 p-5 text-sm text-slate-400">No links are public yet.</p>
+    <% end %>
+
+    <% if @available_links.any? %>
+      <%= form_with url: profile_links_path, class: "mt-6 flex flex-col gap-3 sm:flex-row sm:items-end" do |form| %>
+        <div class="flex-1"><%= form.label :link_id, "Add one of your links", class: "text-sm font-medium" %><%= form.collection_select :link_id, @available_links, :id, :name, {}, required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+        <%= form.submit "Add link", class: "rounded-xl bg-white/10 px-5 py-3 font-semibold hover:bg-white/15", data: { turbo_submits_with: "Adding…" } %>
+      <% end %>
+    <% elsif current_user.account.links.none? %>
+      <p class="mt-5 text-sm text-slate-400"><%= link_to "Create a short link", new_link_path, class: "font-semibold text-lime-300 hover:text-lime-200" %> before adding it here.</p>
+    <% end %>
+  </section>
+
+  <section id="social-links" class="mt-8 scroll-mt-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" aria-labelledby="social-links-heading">
+    <h2 id="social-links-heading" class="text-2xl font-bold">Social links</h2>
+    <p class="mt-2 text-sm text-slate-400">Add up to <%= SocialLink::MAX_PER_PROFILE %> websites or social profiles.</p>
+
+    <% if @profile.social_links.any? %>
+      <ol class="mt-6 space-y-3">
+        <% @profile.social_links.each_with_index do |social_link, index| %>
+          <li class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/20 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0"><span class="font-semibold"><%= social_link.label %></span><span class="mt-1 block truncate text-sm text-slate-500"><%= social_link.url %></span></div>
+            <div class="flex items-center gap-2">
+              <%= button_to "Move up", move_up_social_link_path(social_link), method: :patch, disabled: index.zero?, class: "rounded-lg border border-white/15 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-35", form: { class: "inline" }, data: { turbo_submits_with: "Moving…" } %>
+              <%= button_to "Move down", move_down_social_link_path(social_link), method: :patch, disabled: index == @profile.social_links.length - 1, class: "rounded-lg border border-white/15 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-35", form: { class: "inline" }, data: { turbo_submits_with: "Moving…" } %>
+              <%= button_to "Remove", social_link_path(social_link), method: :delete, class: "rounded-lg px-3 py-2 text-sm text-rose-300 hover:bg-rose-300/10", form: { class: "inline" }, data: { turbo_confirm: "Remove this social link?", turbo_submits_with: "Removing…" } %>
+            </div>
+          </li>
+        <% end %>
+      </ol>
+    <% end %>
+
+    <% if @profile.social_links.length < SocialLink::MAX_PER_PROFILE %>
+      <%= form_with model: @social_link, class: "mt-6 grid gap-4 sm:grid-cols-[1fr_2fr_auto] sm:items-end" do |form| %>
+        <div><%= form.label :label, class: "text-sm font-medium" %><%= form.text_field :label, maxlength: 40, required: true, placeholder: "GitHub", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+        <div><%= form.label :url, class: "text-sm font-medium" %><%= form.url_field :url, maxlength: 2048, required: true, placeholder: "https://github.com/you", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+        <%= form.submit "Add social link", class: "rounded-xl bg-white/10 px-5 py-3 font-semibold hover:bg-white/15", data: { turbo_submits_with: "Adding…" } %>
+      <% end %>
+    <% end %>
+  </section>
+
   <div class="mt-8 grid gap-5 sm:grid-cols-3">
     <%= link_to "Account and password settings", edit_user_registration_path, class: "rounded-2xl border border-white/10 bg-white/[0.03] p-5 font-medium transition hover:bg-white/[0.06]" %>
     <%= link_to "Back to dashboard", dashboard_path, class: "rounded-2xl border border-white/10 bg-white/[0.03] p-5 font-medium transition hover:bg-white/[0.06]" %>

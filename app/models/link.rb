@@ -14,6 +14,7 @@ class Link < ApplicationRecord
   has_many :visits, dependent: :destroy
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
+  has_many :profile_links, dependent: :destroy
 
   attr_accessor :slug_generated
 
