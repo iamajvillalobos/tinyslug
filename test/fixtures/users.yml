@@ -1,0 +1,13 @@
+alice:
+  account: alice
+  email: alice@example.com
+  username: alice
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  confirmed_at: <%= 1.day.ago %>
+
+bob:
+  account: bob
+  email: bob@example.com
+  username: bob_user
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  confirmed_at: <%= 1.day.ago %>

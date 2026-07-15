@@ -1,0 +1,11 @@
+alice:
+  user: alice
+  first_name: Alice
+  timezone: UTC
+  public_enabled: false
+
+bob:
+  user: bob
+  first_name: Bob
+  timezone: UTC
+  public_enabled: false
