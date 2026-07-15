@@ -10,18 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_164948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "key", null: false
-    t.integer "kind", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_accounts_on_key", unique: true
     t.check_constraint "key::text = lower(key::text) AND char_length(key::text) > 0", name: "accounts_key_normalized_check"
-    t.check_constraint "kind = ANY (ARRAY[0, 1])", name: "accounts_kind_check"
   end
 
   create_table "api_tokens", force: :cascade do |t|
@@ -75,12 +73,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
     t.index ["custom_domain_id", "slug"], name: "index_links_on_custom_domain_and_slug", unique: true
     t.index ["custom_domain_id"], name: "index_links_on_custom_domain_id"
     t.index ["slug"], name: "index_links_on_primary_slug", unique: true, where: "(custom_domain_id IS NULL)"
-    t.check_constraint "NOT (source = 2 AND (custom_domain_id IS NOT NULL OR tracking_enabled))", name: "links_public_privacy_check"
     t.check_constraint "char_length(destination_url) >= 1 AND char_length(destination_url) <= 2048", name: "links_destination_length_check"
     t.check_constraint "char_length(name::text) >= 1 AND char_length(name::text) <= 255", name: "links_name_length_check"
     t.check_constraint "char_length(slug::text) >= 3 AND char_length(slug::text) <= 64", name: "links_slug_length_check"
     t.check_constraint "slug::text = lower(slug::text) AND slug::text ~ '^[a-z0-9]+(-[a-z0-9]+)*$'::text", name: "links_slug_format_check"
-    t.check_constraint "source = ANY (ARRAY[0, 1, 2])", name: "links_source_check"
+    t.check_constraint "source = ANY (ARRAY[0, 1])", name: "links_source_check"
   end
 
   create_table "profiles", force: :cascade do |t|

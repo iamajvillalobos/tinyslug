@@ -1,7 +1,5 @@
 alice:
-  kind: personal
   key: alice-account-key
 
 bob:
-  kind: personal
   key: bob-account-key

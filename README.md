@@ -57,7 +57,7 @@ Individual checks are available through `mise exec -- bin/rails test`, `mise exe
 
 ## Configuration
 
-`.env.example` documents every supported setting. Production requires `APP_HOST`, `DATABASE_URL`, `SECRET_KEY_BASE`, `VISITOR_DIGEST_SECRET`, `API_TOKEN_DIGEST_SECRET`, and `RATE_LIMIT_DIGEST_SECRET`. Each digest secret must be independent. Public shortening is disabled unless `PUBLIC_SHORTENER_ENABLED=true`.
+`.env.example` documents every supported setting. Production requires `APP_HOST`, `DATABASE_URL`, `SECRET_KEY_BASE`, `VISITOR_DIGEST_SECRET`, `API_TOKEN_DIGEST_SECRET`, and `RATE_LIMIT_DIGEST_SECRET`. Each digest secret must be independent.
 
 See `docs/operations.md` for deployment, SMTP, custom-domain DNS/TLS, backups, and worker runbooks. `docs/routes.md` records every route area's authentication decision.
 

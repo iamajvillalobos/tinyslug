@@ -4,7 +4,6 @@ module Visits
   class PayloadBuilder
     def self.call(link:, ip_address:, user_agent:, referrer:, dnt:, gpc:, country_code: nil, occurred_at: Time.current)
       return unless link.tracking_enabled?
-      return if link.public_shortener?
       return if dnt.to_s == "1" || gpc.to_s == "1"
 
       detector = DeviceDetector.new(user_agent.to_s)

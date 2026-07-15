@@ -2,12 +2,12 @@ class Link < ApplicationRecord
   SLUG_ALPHABET = "23456789abcdefghjkmnpqrstuvwxyz".freeze
   RESERVED_SLUGS = %w[
     admin analytics api assets cable confirmation dashboard domains login logout
-    password privacy profiles rails register settings shorten storage support terms
+    password privacy profiles rails register settings storage support terms
     tokens up users
   ].freeze
   SLUG_PATTERN = /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/
 
-  enum :source, { dashboard: 0, api: 1, public_shortener: 2 }, validate: true
+  enum :source, { dashboard: 0, api: 1 }, validate: true
 
   belongs_to :account
   belongs_to :custom_domain, optional: true
@@ -32,7 +32,6 @@ class Link < ApplicationRecord
     exclusion: { in: RESERVED_SLUGS },
     uniqueness: { scope: :custom_domain_id }
   validate :custom_domain_belongs_to_account
-  validate :public_shortener_invariants
 
   def self.generate_slug(length: 8)
     Array.new(length) { SLUG_ALPHABET[SecureRandom.random_number(SLUG_ALPHABET.length)] }.join
@@ -58,16 +57,5 @@ class Link < ApplicationRecord
     return unless custom_domain && custom_domain.account_id != account_id
 
     errors.add(:custom_domain, "must belong to the same account")
-  end
-
-  def public_shortener_invariants
-    if public_shortener?
-      errors.add(:account, "must be the public shortener") unless account&.public_shortener?
-      errors.add(:custom_domain, "is not available for public links") if custom_domain
-      errors.add(:tracking_enabled, "must be disabled for public links") if tracking_enabled?
-      errors.add(:slug, "must be generated") unless slug_generated
-    elsif account&.public_shortener?
-      errors.add(:account, "cannot own member links")
-    end
   end
 end

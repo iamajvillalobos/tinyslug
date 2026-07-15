@@ -48,7 +48,6 @@ env:
     APP_HOST: app.example.com
     APP_PROTOCOL: https
     CUSTOM_DOMAIN_DNS_TARGET: app.example.com
-    PUBLIC_SHORTENER_ENABLED: false
     DEMO_MODE_ENABLED: false
     # Set number of processes dedicated to Solid Queue (default: 1)
     # JOB_CONCURRENCY: 3

@@ -51,20 +51,4 @@ class LinkTest < ActiveSupport::TestCase
 
     assert link.save
   end
-
-  test "public links enforce privacy and ownership invariants" do
-    public_account = Account.new(kind: :public_shortener, key: "public-shortener")
-    link = Link.new(
-      account: public_account,
-      destination_url: "https://example.com",
-      name: "Public",
-      slug: "public-link",
-      source: :public_shortener,
-      tracking_enabled: true
-    )
-
-    assert_not link.valid?
-    assert_includes link.errors[:tracking_enabled], "must be disabled for public links"
-    assert_includes link.errors[:slug], "must be generated"
-  end
 end

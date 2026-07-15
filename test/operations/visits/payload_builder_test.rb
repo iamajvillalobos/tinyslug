@@ -45,7 +45,7 @@ module Visits
       assert_empty payload.keys.grep(/ip|agent/)
     end
 
-    test "skips disabled public opted-out and bot traffic" do
+    test "skips disabled opted-out and bot traffic" do
       @link.update!(tracking_enabled: false)
       assert_nil build
 
@@ -53,9 +53,6 @@ module Visits
       assert_nil build(dnt: "1")
       assert_nil build(gpc: "1")
       assert_nil build(user_agent: BOT_USER_AGENT)
-
-      @link.source = :public_shortener
-      assert_nil build
     end
 
     test "degrades invalid country and referrer metadata to blank" do

@@ -24,8 +24,8 @@ class DemoResetJob < ApplicationJob
   def wipe_all_data
     counts = ORPHAN_SWEEP_ORDER.index_with { |name| name.constantize.count }
 
-    # The public shortener account is recreated lazily by Account.public_shortener,
-    # so it is safe to delete along with everything else.
+    # Every account is recreated by the seed data reload, so it is safe to
+    # delete everything here.
     Account.destroy_all
     ORPHAN_SWEEP_ORDER.each { |name| name.constantize.delete_all }
 

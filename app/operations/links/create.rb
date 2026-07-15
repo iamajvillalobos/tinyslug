@@ -24,15 +24,6 @@ module Links
       custom_domain = resolve_custom_domain(custom_domain_id)
       return finish(Result.new(invalid_link, :invalid)) if custom_domain_id.present? && !custom_domain
 
-      if source == :public_shortener
-        attributes.delete(:custom_domain_id)
-        attributes.delete(:slug)
-        attributes.delete(:name)
-        attributes[:tracking_enabled] = false
-        custom_domain = nil
-        requested_name = requested_slug = false
-      end
-
       unless requested_name || requested_slug
         existing = duplicate_scope(custom_domain).find_by(destination_url: attributes[:destination_url])
         return finish(Result.new(existing, :reused)) if existing

@@ -83,31 +83,6 @@ module Links
       end
     end
 
-    test "public creation ignores member-only options" do
-      original = Rails.configuration.x.public_shortener_enabled
-      Rails.configuration.x.public_shortener_enabled = true
-      account = Account.public_shortener
-
-      result = Links::Create.call(
-        account:,
-        attributes: {
-          destination_url: "https://example.com/public",
-          name: "Ignored",
-          slug: "requested-slug",
-          tracking_enabled: true
-        },
-        source: :public_shortener
-      )
-
-      assert result.created?
-      assert result.link.public_shortener?
-      assert_not result.link.tracking_enabled?
-      assert_nil result.link.custom_domain
-      assert_not_equal "requested-slug", result.link.slug
-    ensure
-      Rails.configuration.x.public_shortener_enabled = original
-    end
-
     private
 
     def with_slug_generator(generator)

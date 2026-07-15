@@ -41,7 +41,7 @@ Beyond MVC, business logic lives in plain Ruby classes autoloaded from:
 
 ### Domain model
 
-`Account` is the tenant root: it owns `links`, `custom_domains`, `tags`, `api_tokens` and has one `User` (Devise, confirmable). A special userless `Account.public_shortener` (kind enum) backs the anonymous `/shorten` flow. On signup, `User#before_validation :build_personal_records` auto-builds the personal Account and Profile with `validates_associated` + autosave (`app/models/user.rb`). `Link` belongs to an account and optionally a `custom_domain`; slug uniqueness is scoped per custom domain, with a partial unique index for primary-host links. DB check constraints enforce slug format, lengths, and that public-shortener links can never have tracking or custom domains (`db/schema.rb`). Normalizations: tag names are squished and downcased, account keys downcased.
+`Account` is the tenant root: it owns `links`, `custom_domains`, `tags`, `api_tokens` and has one `User` (Devise, confirmable). On signup, `User#before_validation :build_personal_records` auto-builds the personal Account and Profile with `validates_associated` + autosave (`app/models/user.rb`). `Link` belongs to an account and optionally a `custom_domain`; slug uniqueness is scoped per custom domain, with a partial unique index for primary-host links. DB check constraints enforce slug format and lengths (`db/schema.rb`). Normalizations: tag names are squished and downcased, account keys downcased.
 
 ### Link creation and resolution
 
@@ -60,15 +60,13 @@ Verification requires both a TXT record (`_tinyslug-verification.<hostname>` wit
 
 ### Auth surfaces
 
-Three distinct auth models (`docs/routes.md` records the decision per route area):
+Two distinct auth models (`docs/routes.md` records the decision per route area):
 
 - Web: Devise with custom paths (`/login`, `/register`, etc.), confirmed session required; records always scoped through `current_user.account`. `ApplicationController` sets `allow_browser versions: :modern` (old browsers get `public/406-unsupported-browser.html`) and redirects sign-in to `dashboard_path`.
 - API (`/api/v1/*`): `Api::BaseController < ActionController::API`, bearer token only (`ApiToken.authenticate` against an HMAC-SHA256 digest keyed by `API_TOKEN_DIGEST_SECRET`); no cookie sessions. The API surface is create-only: `POST /api/v1/links` is the sole endpoint (`resources :links, only: :create` in `config/routes.rb`). Error shapes differ: auth failures return `{ "error": "Unauthorized" }`, validation failures return `{ "errors": {...} }`; success is 201 on create, 200 when deduped to an existing link, shaped by `Api::V1::LinkRepresentation`. Plaintext token secrets are prefixed `ts_` and shown once; `ApiToken.issue` returns a `Data.define` of (api_token, secret); `last_used_at` updates are throttled to once per hour.
-- Public shortener (`/shorten`): disabled unless `PUBLIC_SHORTENER_ENABLED=true`; rate-limited via privacy-safe IP-derived keys (`Privacy::RateLimitKey`, `RATE_LIMIT_DIGEST_SECRET`).
-
 ### Rate limiting
 
-Rails 8 native `rate_limit` declared per controller, not Rack::Attack. Each controller defines `RATE_LIMIT_STORE = Rails.env.test? ? ActiveSupport::Cache::MemoryStore.new : Rails.cache` so limits do not bleed across parallel tests. Examples: `Api::V1::LinksController` (60/min by account), `Public::LinksController` (10/min), `CustomDomainsController` (5/10min, only `:verify`), `ApiTokensController`, `Users::SessionsController`, `Users::PasswordsController`. New endpoints should follow this pattern and key via `Privacy::RateLimitKey` where IP-derived. Rate-limited responses render `public/429.html`.
+Rails 8 native `rate_limit` declared per controller, not Rack::Attack. Each controller defines `RATE_LIMIT_STORE = Rails.env.test? ? ActiveSupport::Cache::MemoryStore.new : Rails.cache` so limits do not bleed across parallel tests. Examples: `Api::V1::LinksController` (60/min by account), `CustomDomainsController` (5/10min, only `:verify`), `ApiTokensController`, `Users::SessionsController`, `Users::PasswordsController`. New endpoints should follow this pattern and key via `Privacy::RateLimitKey` where IP-derived. Rate-limited responses render `public/429.html`.
 
 ### Demo mode
 

@@ -14,7 +14,6 @@ class User < ApplicationRecord
     format: { with: /\A[a-z0-9_]+\z/ },
     uniqueness: { case_sensitive: false }
   validates_associated :account, :profile
-  validate :account_must_be_personal
 
   private
 
@@ -25,15 +24,11 @@ class User < ApplicationRecord
   end
 
   def build_personal_records
-    build_account(kind: :personal) unless account
+    build_account unless account
     build_profile unless profile
   end
 
   def normalize_username
     self.username = username.to_s.strip.downcase
-  end
-
-  def account_must_be_personal
-    errors.add(:account, "must be personal") if account && !account.personal?
   end
 end
