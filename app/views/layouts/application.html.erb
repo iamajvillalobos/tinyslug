@@ -49,7 +49,7 @@
       </nav>
     </header>
 
-    <%= render "shared/demo_banner" if demo_mode? %>
+    <%= render "shared/demo_banner" if demo_mode? && user_signed_in? %>
 
     <div id="flash-messages"><%= render "shared/flash" %></div>
 

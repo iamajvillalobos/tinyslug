@@ -12,20 +12,31 @@ class DemoModeTest < ActionDispatch::IntegrationTest
     Rails.configuration.x.demo_mode_enabled = @original_setting
   end
 
-  test "banner renders below the header when demo mode is on" do
+  test "banner renders for signed-in users when demo mode is on" do
     Rails.configuration.x.demo_mode_enabled = true
+    sign_in users(:alice)
 
-    get root_url
+    get dashboard_url
 
     assert_response :success
     assert_includes response.body, BANNER_COPY
     assert_select "a.link[href='https://github.com/iamajvillalobos/tinyslug']", text: "Self-host tinyslug"
   end
 
-  test "banner is absent when demo mode is off" do
-    Rails.configuration.x.demo_mode_enabled = false
+  test "banner is absent for logged-out visitors even when demo mode is on" do
+    Rails.configuration.x.demo_mode_enabled = true
 
     get root_url
+
+    assert_response :success
+    assert_not_includes response.body, BANNER_COPY
+  end
+
+  test "banner is absent when demo mode is off" do
+    Rails.configuration.x.demo_mode_enabled = false
+    sign_in users(:alice)
+
+    get dashboard_url
 
     assert_response :success
     assert_not_includes response.body, BANNER_COPY
