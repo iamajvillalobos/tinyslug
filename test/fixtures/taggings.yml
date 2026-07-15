@@ -1,0 +1,11 @@
+alice_docs:
+  link: alice_docs
+  tag: alice_docs
+
+alice_product:
+  link: alice_docs
+  tag: alice_product
+
+bob_docs:
+  link: bob_docs
+  tag: bob_docs

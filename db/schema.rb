@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_112010) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_113000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,48 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_112010) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "custom_domains", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "dns_target"
+    t.text "fallback_url"
+    t.string "hostname", null: false
+    t.datetime "last_checked_at"
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.string "verification_token", null: false
+    t.datetime "verified_at"
+    t.index "lower((hostname)::text)", name: "index_custom_domains_on_lower_hostname", unique: true
+    t.index ["account_id"], name: "index_custom_domains_on_account_id"
+    t.index ["verification_token"], name: "index_custom_domains_on_verification_token", unique: true
+    t.check_constraint "hostname::text = lower(hostname::text) AND char_length(hostname::text) >= 1 AND char_length(hostname::text) <= 253", name: "custom_domains_hostname_check"
+    t.check_constraint "status = ANY (ARRAY[0, 1, 2])", name: "custom_domains_status_check"
+  end
+
+  create_table "links", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "custom_domain_id"
+    t.text "destination_url", null: false
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.integer "source", default: 0, null: false
+    t.boolean "tracking_enabled", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "created_at"], name: "index_links_on_account_id_and_created_at"
+    t.index ["account_id", "source"], name: "index_links_on_account_id_and_source"
+    t.index ["account_id"], name: "index_links_on_account_id"
+    t.index ["custom_domain_id", "slug"], name: "index_links_on_custom_domain_and_slug", unique: true
+    t.index ["custom_domain_id"], name: "index_links_on_custom_domain_id"
+    t.index ["slug"], name: "index_links_on_primary_slug", unique: true, where: "(custom_domain_id IS NULL)"
+    t.check_constraint "NOT (source = 2 AND (custom_domain_id IS NOT NULL OR tracking_enabled))", name: "links_public_privacy_check"
+    t.check_constraint "char_length(destination_url) >= 1 AND char_length(destination_url) <= 2048", name: "links_destination_length_check"
+    t.check_constraint "char_length(name::text) >= 1 AND char_length(name::text) <= 255", name: "links_name_length_check"
+    t.check_constraint "char_length(slug::text) >= 3 AND char_length(slug::text) <= 64", name: "links_slug_length_check"
+    t.check_constraint "slug::text = lower(slug::text) AND slug::text ~ '^[a-z0-9]+(-[a-z0-9]+)*$'::text", name: "links_slug_format_check"
+    t.check_constraint "source = ANY (ARRAY[0, 1, 2])", name: "links_source_check"
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.text "bio"
     t.datetime "created_at", null: false
@@ -65,6 +107,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_112010) do
     t.check_constraint "char_length(bio) <= 500", name: "profiles_bio_length_check"
     t.check_constraint "char_length(first_name::text) <= 100", name: "profiles_first_name_length_check"
     t.check_constraint "char_length(last_name::text) <= 100", name: "profiles_last_name_length_check"
+  end
+
+  create_table "taggings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "link_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["link_id", "tag_id"], name: "index_taggings_on_link_id_and_tag_id", unique: true
+    t.index ["link_id"], name: "index_taggings_on_link_id"
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "name"], name: "index_tags_on_account_id_and_name", unique: true
+    t.index ["account_id"], name: "index_tags_on_account_id"
+    t.check_constraint "name::text = lower(name::text) AND char_length(name::text) >= 1 AND char_length(name::text) <= 40", name: "tags_name_check"
   end
 
   create_table "users", force: :cascade do |t|
@@ -93,6 +155,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_112010) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "custom_domains", "accounts", on_delete: :cascade
+  add_foreign_key "links", "accounts", on_delete: :cascade
+  add_foreign_key "links", "custom_domains", on_delete: :nullify
   add_foreign_key "profiles", "users", on_delete: :cascade
+  add_foreign_key "taggings", "links", on_delete: :cascade
+  add_foreign_key "taggings", "tags", on_delete: :cascade
+  add_foreign_key "tags", "accounts", on_delete: :cascade
   add_foreign_key "users", "accounts", on_delete: :cascade
 end

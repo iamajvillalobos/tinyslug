@@ -1,0 +1,11 @@
+alice_docs:
+  account: alice
+  name: docs
+
+alice_product:
+  account: alice
+  name: product
+
+bob_docs:
+  account: bob
+  name: docs

@@ -1,0 +1,21 @@
+alice_verified:
+  account: alice
+  hostname: go.alice.test
+  status: verified
+  verification_token: <%= "a" * 64 %>
+  dns_target: links.example.test
+  verified_at: <%= 1.day.ago %>
+
+alice_pending:
+  account: alice
+  hostname: pending.alice.test
+  status: pending
+  verification_token: <%= "b" * 64 %>
+  dns_target: links.example.test
+
+bob_verified:
+  account: bob
+  hostname: go.bob.test
+  status: verified
+  verification_token: <%= "c" * 64 %>
+  dns_target: links.example.test

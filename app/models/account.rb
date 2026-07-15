@@ -2,6 +2,9 @@ class Account < ApplicationRecord
   enum :kind, { personal: 0, public_shortener: 1 }, validate: true
 
   has_one :user, dependent: :destroy, inverse_of: :account
+  has_many :links, dependent: :destroy
+  has_many :custom_domains, dependent: :destroy
+  has_many :tags, dependent: :destroy
 
   before_validation :generate_key, on: :create
   before_validation :normalize_key
