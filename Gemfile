@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+ruby "4.0.6"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.3"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
@@ -18,6 +20,14 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+
+# Product features
+gem "active_storage_validations", "~> 3.0"
+gem "chartkick", "~> 5.2"
+gem "device_detector", "~> 1.1"
+gem "devise", "~> 5.0"
+gem "pagy", "~> 43.6"
+gem "rqrcode", "~> 3.2"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"

@@ -21,6 +21,18 @@ FileUtils.chdir APP_ROOT do
   # end
 
   puts "\n== Preparing database =="
+  database_url = ENV["DATABASE_URL"] || ENV["TEST_DATABASE_URL"]
+  readiness_command = [ "pg_isready" ]
+  readiness_command.concat([ "--dbname", database_url ]) if database_url
+
+  unless system(*readiness_command, out: File::NULL, err: File::NULL)
+    warn <<~MESSAGE
+      PostgreSQL is unavailable. Start it with `docker compose up -d postgres`
+      or start a native PostgreSQL server, then run `mise exec -- bin/setup` again.
+    MESSAGE
+    exit 1
+  end
+
   system! "bin/rails db:prepare"
   system! "bin/rails db:reset" if ARGV.include?("--reset")
 

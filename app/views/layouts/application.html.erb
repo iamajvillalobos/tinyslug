@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="h-full bg-slate-950">
   <head>
-    <title><%= content_for(:title) || "Tinyslug" %></title>
+    <title><%= content_for(:title) || "tinyslug · private link management" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Privacy-first short links, custom domains, and useful analytics.">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Tinyslug">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,9 +24,38 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="min-h-full text-slate-100 antialiased">
+    <header class="border-b border-white/10">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-5" aria-label="Primary navigation">
+        <%= link_to root_path, class: "flex items-center gap-2 text-lg font-semibold tracking-tight" do %>
+          <span class="grid size-8 place-items-center rounded-xl bg-lime-300 font-black text-slate-950">t</span>
+          tinyslug
+        <% end %>
+        <div class="flex items-center gap-5 text-sm text-slate-300">
+          <%= link_to "Privacy", privacy_path, class: "transition hover:text-white" %>
+          <%= link_to "Terms", terms_path, class: "transition hover:text-white" %>
+        </div>
+      </nav>
+    </header>
+
+    <% if notice %>
+      <div class="mx-auto mt-5 max-w-6xl px-5" role="status">
+        <p class="rounded-xl border border-lime-300/30 bg-lime-300/10 px-4 py-3 text-sm text-lime-100"><%= notice %></p>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="mx-auto mt-5 max-w-6xl px-5" role="alert">
+        <p class="rounded-xl border border-rose-300/30 bg-rose-300/10 px-4 py-3 text-sm text-rose-100"><%= alert %></p>
+      </div>
+    <% end %>
+
+    <main>
       <%= yield %>
     </main>
+
+    <footer class="mx-auto mt-24 flex max-w-6xl flex-col gap-3 border-t border-white/10 px-5 py-8 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+      <p>Short links without long-lived visitor identities.</p>
+      <p>Open source under the MIT License.</p>
+    </footer>
   </body>
 </html>

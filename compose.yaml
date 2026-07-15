@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: tinyslug_development
+      POSTGRES_PASSWORD: tinyslug
+      POSTGRES_USER: tinyslug
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tinyslug -d tinyslug_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
