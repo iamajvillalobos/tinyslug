@@ -1,0 +1,24 @@
+<% content_for :title, "Analytics · tinyslug" %>
+<section class="mx-auto max-w-6xl px-5 py-12" data-controller="analytics">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div><p class="text-sm font-medium text-lime-300">Privacy-safe signals</p><h1 class="mt-2 text-4xl font-bold tracking-tight"><%= @link ? @link.name : "Analytics" %></h1><p class="mt-3 text-slate-400">Aggregate activity in <%= current_user.profile.timezone %>, with no raw visitor identities.</p></div>
+    <nav class="flex rounded-xl border border-white/10 p-1" aria-label="Analytics period"><%= link_to "7 days", analytics_path(period: 7), class: "rounded-lg px-3 py-2 text-sm #{'bg-white/10 text-white' if @analytics.period_days == 7}" %><%= link_to "30 days", analytics_path(period: 30), class: "rounded-lg px-3 py-2 text-sm #{'bg-white/10 text-white' if @analytics.period_days == 30}" %></nav>
+  </div>
+
+  <div class="mt-10 grid gap-4 sm:grid-cols-2">
+    <article class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><p class="text-sm text-slate-400">Total visits</p><p class="mt-2 text-4xl font-bold"><%= number_with_delimiter(@analytics.total_visits) %></p></article>
+    <article class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><p class="text-sm text-slate-400">Unique daily visitors</p><p class="mt-2 text-4xl font-bold"><%= number_with_delimiter(@analytics.unique_visits) %></p></article>
+  </div>
+
+  <article class="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+    <h2 class="text-xl font-semibold">Visits over time</h2>
+    <div class="mt-6"><%= line_chart @analytics.visits_over_time, colors: ["#bef264"], library: { plugins: { legend: { display: false } } } %></div>
+    <table class="mt-6 w-full text-left text-sm"><caption class="sr-only">Daily visit totals</caption><thead class="text-slate-400"><tr><th class="py-2">Date</th><th class="py-2 text-right">Visits</th></tr></thead><tbody><% @analytics.visits_over_time.each do |date, count| %><tr class="border-t border-white/10"><td class="py-2"><%= date %></td><td class="py-2 text-right"><%= count %></td></tr><% end %></tbody></table>
+  </article>
+
+  <div class="mt-6 grid gap-6 lg:grid-cols-2">
+    <% { "Top links" => @analytics.top_links.transform_keys { |(_id, name)| name }, "Countries" => @analytics.countries, "Referrers" => @analytics.referrers, "Browsers" => @analytics.browsers, "Devices" => @analytics.devices }.each do |title, rows| %>
+      <article class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h2 class="text-xl font-semibold"><%= title %></h2><table class="mt-4 w-full text-left text-sm"><thead class="text-slate-400"><tr><th class="py-2"><%= title.singularize %></th><th class="py-2 text-right">Visits</th></tr></thead><tbody><% rows.each do |label, count| %><tr class="border-t border-white/10"><td class="max-w-64 truncate py-2"><%= label %></td><td class="py-2 text-right"><%= count %></td></tr><% end %></tbody></table></article>
+    <% end %>
+  </div>
+</section>

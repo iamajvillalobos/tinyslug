@@ -11,6 +11,7 @@ class Link < ApplicationRecord
 
   belongs_to :account
   belongs_to :custom_domain, optional: true
+  has_many :visits, dependent: :destroy
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
 

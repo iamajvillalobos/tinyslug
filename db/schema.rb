@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_114500) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -170,6 +170,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_114500) do
     t.check_constraint "username::text ~ '^[a-z0-9_]+$'::text", name: "users_username_format_check"
   end
 
+  create_table "visits", force: :cascade do |t|
+    t.string "browser", limit: 100
+    t.string "country_code", limit: 2
+    t.string "device_type", limit: 100
+    t.string "event_key", null: false
+    t.bigint "link_id", null: false
+    t.datetime "occurred_at", null: false
+    t.string "referrer_host", limit: 253
+    t.string "visitor_digest", limit: 64, null: false
+    t.index ["event_key"], name: "index_visits_on_event_key", unique: true
+    t.index ["link_id", "occurred_at"], name: "index_visits_on_link_id_and_occurred_at"
+    t.index ["link_id", "visitor_digest", "occurred_at"], name: "index_visits_on_link_visitor_and_time"
+    t.index ["link_id"], name: "index_visits_on_link_id"
+    t.check_constraint "char_length(browser::text) <= 100", name: "visits_browser_length_check"
+    t.check_constraint "char_length(device_type::text) <= 100", name: "visits_device_length_check"
+    t.check_constraint "char_length(referrer_host::text) <= 253", name: "visits_referrer_length_check"
+    t.check_constraint "country_code IS NULL OR country_code::text ~ '^[A-Z]{2}$'::text", name: "visits_country_code_check"
+    t.check_constraint "visitor_digest::text ~ '^[a-f0-9]{64}$'::text", name: "visits_digest_format_check"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "api_tokens", "accounts", on_delete: :cascade
@@ -181,4 +201,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_114500) do
   add_foreign_key "taggings", "tags", on_delete: :cascade
   add_foreign_key "tags", "accounts", on_delete: :cascade
   add_foreign_key "users", "accounts", on_delete: :cascade
+  add_foreign_key "visits", "links", on_delete: :cascade
 end
