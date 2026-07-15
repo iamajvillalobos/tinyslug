@@ -29,6 +29,9 @@ Rails.application.routes.draw do
   end
   resources :analytics, only: :index
   get "analytics/links/:link_id", to: "analytics#index", as: :link_analytics
+  resources :custom_domains do
+    post :verify, on: :member
+  end
   get "shorten", to: "public/links#new", as: :public_shortener
   post "shorten", to: "public/links#create"
   get "api/docs", to: "pages#api_docs", as: :api_docs

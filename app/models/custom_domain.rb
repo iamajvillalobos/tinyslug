@@ -16,7 +16,7 @@ class CustomDomain < ApplicationRecord
     format: { with: HOSTNAME_PATTERN },
     uniqueness: { case_sensitive: false }
   validates :fallback_url, safe_http_url: { allow_blank: true }, length: { maximum: 2048 }
-  validates :verification_token, presence: true, uniqueness: true
+  validates :verification_token, presence: true, uniqueness: true, length: { minimum: 64 }
   validate :hostname_is_not_reserved
   validate :hostname_is_not_an_ip_address
 

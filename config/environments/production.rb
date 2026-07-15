@@ -83,7 +83,15 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  config.hosts = [ ENV["APP_HOST"]&.split(":")&.first ].compact
+  primary_host = ENV["APP_HOST"]&.split(":")&.first
+  verified_custom_host = lambda do |host|
+    hostname = host.to_s.downcase.sub(/:\d+\z/, "")
+    CustomDomain.verified.exists?(hostname:)
+  end
+  config.hosts = [ primary_host, verified_custom_host ].compact
+
+  trusted_proxy_cidrs = ENV.fetch("TRUSTED_PROXY_CIDRS", "127.0.0.0/8,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16")
+  config.action_dispatch.trusted_proxies = trusted_proxy_cidrs.split(",").map { |cidr| IPAddr.new(cidr.strip) }
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }

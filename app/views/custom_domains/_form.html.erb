@@ -1,0 +1,6 @@
+<%= form_with model: custom_domain, class: "space-y-5" do |form| %>
+  <%= render "errors", custom_domain: %>
+  <% unless custom_domain.persisted? %><div><%= form.label :hostname, class: "text-sm font-medium" %><%= form.text_field :hostname, required: true, placeholder: "go.example.com", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300" %><p class="mt-2 text-xs text-slate-500">ASCII or punycode hostname only. Do not include a scheme, port, or path.</p></div><% end %>
+  <div><%= form.label :fallback_url, "Fallback URL", class: "text-sm font-medium" %><%= form.url_field :fallback_url, placeholder: "https://example.com", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300" %><p class="mt-2 text-xs text-slate-500">Optional destination when a slug does not exist on this host.</p></div>
+  <%= form.submit custom_domain.persisted? ? "Save fallback" : "Add domain", class: "rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 hover:bg-lime-200", data: { turbo_submits_with: "Saving…" } %>
+<% end %>

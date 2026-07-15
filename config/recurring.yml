@@ -17,3 +17,7 @@ production:
     class: VisitRetentionJob
     queue: background
     schedule: at 3am every day
+  verify_custom_domains:
+    class: CustomDomainVerificationSweepJob
+    queue: background
+    schedule: every 30 minutes
