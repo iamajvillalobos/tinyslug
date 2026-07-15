@@ -5,7 +5,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get root_url
 
     assert_response :success
-    assert_select "h1", /Small links/
+    assert_select "h1", /Cut the tracking/
     assert_equal "DENY", response.headers["X-Frame-Options"]
     assert_equal "strict-origin-when-cross-origin", response.headers["Referrer-Policy"]
     assert_includes response.headers["Permissions-Policy"], "geolocation=()"

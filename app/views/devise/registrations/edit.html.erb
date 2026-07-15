@@ -1,23 +1,24 @@
 <% content_for :title, "Account settings · tinyslug" %>
-<section class="mx-auto max-w-3xl px-5 py-12">
-  <p class="text-sm font-medium text-lime-300">Settings</p>
-  <h1 class="mt-2 text-4xl font-bold tracking-tight">Account and password</h1>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "mt-10 space-y-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" }) do |form| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
-    <div><%= form.label :username, class: "text-sm font-medium" %><%= form.text_field :username, autocomplete: "username", required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
-    <div><%= form.label :email, class: "text-sm font-medium" %><%= form.email_field :email, autocomplete: "email", required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %><% if devise_mapping.confirmable? && resource.pending_reconfirmation? %><p class="mt-2 text-sm text-amber-200">Waiting for confirmation of <%= resource.unconfirmed_email %>.</p><% end %></div>
-    <div class="grid gap-5 sm:grid-cols-2">
-      <div><%= form.label :password, "New password", class: "text-sm font-medium" %><%= form.password_field :password, autocomplete: "new-password", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %><p class="mt-2 text-xs text-slate-500">Leave blank to keep the current password.</p></div>
-      <div><%= form.label :password_confirmation, class: "text-sm font-medium" %><%= form.password_field :password_confirmation, autocomplete: "new-password", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
-    </div>
-    <div><%= form.label :current_password, class: "text-sm font-medium" %><%= form.password_field :current_password, autocomplete: "current-password", required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %><p class="mt-2 text-xs text-slate-500">Required to confirm account changes.</p></div>
-    <%= form.submit "Save account", class: "rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 hover:bg-lime-200", data: { turbo_submits_with: "Saving…" } %>
-  <% end %>
+<section class="mx-auto max-w-md px-5 py-16">
+  <div class="card p-6 sm:p-8">
+    <p class="eyebrow">Settings</p>
+    <h1 class="mt-2 font-mono text-2xl font-semibold tracking-tight text-ink">Account and password</h1>
 
-  <div class="mt-8 rounded-3xl border border-rose-300/20 bg-rose-300/[0.05] p-6 sm:p-8">
-    <h2 class="text-xl font-semibold">Delete account</h2>
-    <p class="mt-2 text-sm text-slate-400">Permanently deletes your links, analytics, domains, and profile. This cannot be undone.</p>
-    <%= button_to "Delete my account", registration_path(resource_name), method: :delete, data: { turbo_confirm: "Permanently delete your tinyslug account?" }, class: "mt-5 rounded-xl border border-rose-300/30 px-4 py-2.5 font-medium text-rose-200 hover:bg-rose-300/10" %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "mt-6 space-y-5" }) do |form| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <div><%= form.label :username, class: "label" %><%= form.text_field :username, autocomplete: "username", required: true, class: "input" %></div>
+      <div><%= form.label :email, class: "label" %><%= form.email_field :email, autocomplete: "email", required: true, class: "input" %><% if devise_mapping.confirmable? && resource.pending_reconfirmation? %><p class="mt-1.5 text-xs text-caution">Waiting for confirmation of <%= resource.unconfirmed_email %>.</p><% end %></div>
+      <div><%= form.label :password, "New password", class: "label" %><%= form.password_field :password, autocomplete: "new-password", class: "input" %><p class="hint mt-1.5">Leave blank to keep the current password.</p></div>
+      <div><%= form.label :password_confirmation, class: "label" %><%= form.password_field :password_confirmation, autocomplete: "new-password", class: "input" %></div>
+      <div><%= form.label :current_password, class: "label" %><%= form.password_field :current_password, autocomplete: "current-password", required: true, class: "input" %><p class="hint mt-1.5">Required to confirm account changes.</p></div>
+      <%= form.submit "Save changes", class: "btn btn-primary w-full", data: { turbo_submits_with: "Saving…" } %>
+    <% end %>
+  </div>
+
+  <div class="card mt-6 border-danger/40 p-6 sm:p-8">
+    <h2 class="font-mono text-lg font-semibold text-ink">Delete account</h2>
+    <p class="mt-2 text-sm leading-6 text-ink-muted">Permanently deletes your links, analytics, domains, and profile. This cannot be undone.</p>
+    <%= button_to "Delete my account", registration_path(resource_name), method: :delete, data: { turbo_confirm: "Permanently delete your tinyslug account?" }, class: "btn btn-danger mt-5" %>
   </div>
 </section>

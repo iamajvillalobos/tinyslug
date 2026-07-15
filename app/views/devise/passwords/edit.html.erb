@@ -1,12 +1,16 @@
 <% content_for :title, "Choose a password · tinyslug" %>
+
 <section class="mx-auto max-w-md px-5 py-16">
-  <p class="text-sm font-medium text-lime-300">Account recovery</p>
-  <h1 class="mt-2 text-4xl font-bold tracking-tight">Choose a new password</h1>
-  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "mt-8 space-y-5" }) do |form| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
-    <%= form.hidden_field :reset_password_token %>
-    <div><%= form.label :password, "New password", class: "text-sm font-medium" %><%= form.password_field :password, autofocus: true, autocomplete: "new-password", required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
-    <div><%= form.label :password_confirmation, "Confirm new password", class: "text-sm font-medium" %><%= form.password_field :password_confirmation, autocomplete: "new-password", required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
-    <%= form.submit "Update password", class: "w-full rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 hover:bg-lime-200", data: { turbo_submits_with: "Updating…" } %>
-  <% end %>
+  <div class="card p-6 sm:p-8">
+    <p class="eyebrow">Account recovery</p>
+    <h1 class="mt-2 font-mono text-2xl font-semibold tracking-tight text-ink">Choose a new password</h1>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "mt-6 space-y-5" }) do |form| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <%= form.hidden_field :reset_password_token %>
+      <div><%= form.label :password, "New password", class: "label" %><%= form.password_field :password, autofocus: true, autocomplete: "new-password", required: true, class: "input" %></div>
+      <div><%= form.label :password_confirmation, "Confirm new password", class: "label" %><%= form.password_field :password_confirmation, autocomplete: "new-password", required: true, class: "input" %></div>
+      <%= form.submit "Update password", class: "btn btn-primary w-full", data: { turbo_submits_with: "Updating…" } %>
+    <% end %>
+  </div>
 </section>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950">
+<html lang="en" class="h-full bg-paper">
   <head>
     <title><%= content_for(:title) || "tinyslug · private link management" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Privacy-first short links, custom domains, and useful analytics.">
+    <meta name="theme-color" content="#F5F6F8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Tinyslug">
     <meta name="mobile-web-app-capable" content="yes">
@@ -24,25 +25,25 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-full text-slate-100 antialiased">
-    <header class="border-b border-white/10">
-      <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-5" aria-label="Primary navigation">
-        <%= link_to root_path, class: "flex items-center gap-2 text-lg font-semibold tracking-tight" do %>
-          <span class="grid size-8 place-items-center rounded-xl bg-lime-300 font-black text-slate-950">t</span>
-          tinyslug
+  <body class="min-h-full text-ink font-sans antialiased">
+    <header class="border-b border-line bg-paper">
+      <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-5" aria-label="Primary navigation">
+        <%= link_to root_path, class: "flex items-center gap-2" do %>
+          <span class="grid size-6 place-items-center rounded-md bg-hyperlink font-mono text-sm font-semibold text-white" aria-hidden="true">t</span>
+          <span class="font-mono text-base font-semibold text-ink">tinyslug</span>
         <% end %>
-        <div class="flex items-center gap-4 text-sm text-slate-300">
+        <div class="flex items-center gap-4 text-sm">
           <% if user_signed_in? %>
-            <%= link_to "Dashboard", dashboard_path, class: "transition hover:text-white" %>
-            <%= link_to "Links", links_path, class: "transition hover:text-white" %>
-            <%= link_to "Analytics", analytics_path, class: "transition hover:text-white" %>
-            <%= link_to "Domains", custom_domains_path, class: "hidden transition hover:text-white lg:inline" %>
-            <%= link_to "Settings", edit_profile_path, class: "transition hover:text-white" %>
-            <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "rounded-lg border border-white/15 px-3 py-2 font-medium text-white transition hover:bg-white/10" %>
+            <%= nav_link_to "Dashboard", dashboard_path %>
+            <%= nav_link_to "Links", links_path %>
+            <%= nav_link_to "Analytics", analytics_path %>
+            <%= nav_link_to "Domains", custom_domains_path, extra_class: "hidden lg:inline" %>
+            <%= nav_link_to "Settings", edit_profile_path %>
+            <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "btn btn-secondary" %>
           <% else %>
-            <%= link_to "Privacy", privacy_path, class: "hidden transition hover:text-white sm:inline" %>
-            <%= link_to "Log in", new_user_session_path, class: "transition hover:text-white" %>
-            <%= link_to "Create account", new_user_registration_path, class: "rounded-lg bg-lime-300 px-3 py-2 font-semibold text-slate-950 transition hover:bg-lime-200" %>
+            <%= nav_link_to "Privacy", privacy_path, extra_class: "hidden sm:inline" %>
+            <%= nav_link_to "Log in", new_user_session_path %>
+            <%= link_to "Create account", new_user_registration_path, class: "btn btn-primary" %>
           <% end %>
         </div>
       </nav>
@@ -54,9 +55,12 @@
       <%= yield %>
     </main>
 
-    <footer class="mx-auto mt-24 flex max-w-6xl flex-col gap-3 border-t border-white/10 px-5 py-8 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-      <p>Short links without long-lived visitor identities.</p>
-      <div class="flex gap-4"><%= link_to "API", api_docs_path, class: "hover:text-white" %><%= link_to "Terms", terms_path, class: "hover:text-white" %><%= link_to "Privacy", privacy_path, class: "hover:text-white" %></div>
+    <footer class="mx-auto mt-24 flex max-w-6xl flex-col gap-3 border-t border-line px-5 py-8 text-sm text-ink-muted sm:flex-row sm:items-center sm:justify-between">
+      <div class="space-y-1">
+        <p>Short links without long-lived visitor identities.</p>
+        <p>Free and open source under the MIT license. <%= link_to "Source on GitHub", "https://github.com/iamajvillalobos/tinyslug", class: "link text-ink-muted hover:text-hyperlink" %></p>
+      </div>
+      <div class="flex gap-4"><%= link_to "API", api_docs_path, class: "link text-ink-muted hover:text-hyperlink" %><%= link_to "Terms", terms_path, class: "link text-ink-muted hover:text-hyperlink" %><%= link_to "Privacy", privacy_path, class: "link text-ink-muted hover:text-hyperlink" %></div>
     </footer>
   </body>
 </html>

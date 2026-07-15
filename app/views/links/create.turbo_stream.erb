@@ -1,7 +1,7 @@
 <% if @link.errors.any? %>
-  <%= turbo_stream.replace "link_form" do %><%= turbo_frame_tag "link_form", class: "mt-10 block rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" do %><h2 class="mb-6 text-xl font-semibold">Create a short link</h2><%= render "form", link: @link %><% end %><% end %>
+  <%= turbo_stream.replace "link_form" do %><%= turbo_frame_tag "link_form", class: "card mt-10 block p-6 sm:p-8" do %><h2 class="mb-6 font-mono text-lg font-semibold">Create a short link</h2><%= render "form", link: @link %><% end %><% end %>
 <% else %>
   <% if @created %><%= turbo_stream.prepend "links-list", partial: "links/link", locals: { link: @link } %><% end %>
-  <%= turbo_stream.replace "link_form" do %><%= turbo_frame_tag "link_form", class: "mt-10 block rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" do %><h2 class="mb-6 text-xl font-semibold">Create a short link</h2><%= render "form", link: current_user.account.links.new(source: :dashboard) %><% end %><% end %>
+  <%= turbo_stream.replace "link_form" do %><%= turbo_frame_tag "link_form", class: "card mt-10 block p-6 sm:p-8" do %><h2 class="mb-6 font-mono text-lg font-semibold">Create a short link</h2><%= render "form", link: current_user.account.links.new(source: :dashboard) %><% end %><% end %>
   <%= turbo_stream.update "flash-messages", partial: "shared/flash" %>
 <% end %>

@@ -1,48 +1,70 @@
 <% content_for :title, "tinyslug · links that respect people" %>
 
-<section class="relative isolate overflow-hidden">
-  <div class="absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(circle_at_top_left,rgba(190,242,100,0.16),transparent_42%),radial-gradient(circle_at_top_right,rgba(56,189,248,0.12),transparent_38%)]"></div>
-  <div class="mx-auto grid max-w-6xl gap-14 px-5 pb-12 pt-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:pt-28">
-    <div>
-      <p class="mb-5 inline-flex rounded-full border border-lime-300/30 bg-lime-300/10 px-3 py-1 text-sm font-medium text-lime-200">Privacy is the default, not an upgrade</p>
-      <h1 class="max-w-4xl text-5xl font-black tracking-[-0.04em] text-white sm:text-7xl">Small links.<br><span class="text-lime-300">Clear signals.</span></h1>
-      <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-300">Create memorable short links, organize them with tags, and understand genuine visits without storing raw IP addresses.</p>
-      <div class="mt-9 flex flex-wrap gap-3">
-        <%= link_to "Create your account", "/register", class: "rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-lime-300/10 transition hover:bg-lime-200" %>
-        <%= link_to "View the source", "https://github.com", class: "rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-white/10" %>
-      </div>
+<section class="border-b border-line" aria-labelledby="hero-heading">
+  <div class="mx-auto max-w-6xl px-5 pt-16 pb-14 sm:pt-24 sm:pb-20">
+    <p class="eyebrow">Free &middot; open source &middot; privacy-first</p>
+    <h1 id="hero-heading" class="mt-4 max-w-3xl font-mono text-3xl font-semibold tracking-tight text-ink sm:text-4xl">Cut the tracking.<br>Keep the link.</h1>
+    <p class="mt-5 max-w-2xl text-base leading-7 text-ink-muted">tinyslug is a free, MIT-licensed link shortener you can use here or self-host. Create memorable short links, organize them with tags, and understand genuine visits without storing raw IP addresses.</p>
+
+    <div class="card mt-10 max-w-3xl p-5 sm:p-6" aria-label="Example: a long tracking URL shortened to a clean slug">
+      <p class="eyebrow">The cut</p>
+      <p class="mt-3 font-mono text-sm leading-7 break-all text-ink">https://example.com/spring-sale<span class="strike-tracker hero-strike">?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=q2&amp;fbclid=IwAR2xN0v&hellip;</span></p>
+      <p class="hero-reveal mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span class="font-mono text-sm text-ink-muted">becomes</span>
+        <span class="slug-chip text-lg">tinyslug.example/spring</span>
+      </p>
     </div>
 
-    <div class="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 backdrop-blur">
-      <div class="mb-5 flex items-center justify-between text-sm text-slate-400">
-        <span>Last 30 days</span><span class="rounded-full bg-sky-400/10 px-2.5 py-1 text-sky-200">privacy-safe</span>
-      </div>
-      <p class="text-5xl font-bold tracking-tight">2,418</p>
-      <p class="mt-1 text-sm text-slate-400">visits across 14 links</p>
-      <div class="mt-8 flex h-28 items-end gap-2" aria-label="Example visit activity chart">
-        <% %w[h-[30%] h-[48%] h-[42%] h-[64%] h-[58%] h-[82%] h-[72%] h-[96%] h-[76%] h-[88%] h-[68%] h-full].each do |height_class| %>
-          <span class="flex-1 rounded-t bg-gradient-to-t from-sky-500/50 to-lime-300 <%= height_class %>"></span>
-        <% end %>
-      </div>
-      <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
-        <div class="rounded-2xl bg-black/20 p-4"><p class="text-slate-400">Top referrer</p><p class="mt-1 font-semibold">Direct / None</p></div>
-        <div class="rounded-2xl bg-black/20 p-4"><p class="text-slate-400">Top device</p><p class="mt-1 font-semibold">Mobile</p></div>
-      </div>
+    <div class="mt-10 flex flex-wrap items-center gap-x-3 gap-y-4">
+      <%= link_to "Create your account", "/register", class: "btn btn-primary" %>
+      <%= link_to "Source on GitHub", "https://github.com/iamajvillalobos/tinyslug", class: "btn btn-secondary" %>
+      <%= link_to "Try it without an account", public_shortener_path, class: "link text-sm" %>
     </div>
   </div>
 </section>
 
-<section class="mx-auto grid max-w-6xl gap-5 px-5 py-16 md:grid-cols-3" aria-labelledby="features-heading">
+<section class="mx-auto max-w-6xl px-5 py-14 sm:py-16" aria-labelledby="privacy-heading">
+  <p class="eyebrow">Privacy by design</p>
+  <h2 id="privacy-heading" class="mt-3 font-mono text-lg font-semibold text-ink">Analytics without a dossier</h2>
+  <p class="mt-3 max-w-2xl text-sm leading-6 text-ink-muted">When tracking is enabled, a visit becomes a daily rotating digest plus coarse request metadata. Do Not Track and Global Privacy Control are honored, and anonymous public links are never tracked.</p>
+
+  <div class="mt-8 grid gap-5 md:grid-cols-2">
+    <div class="card p-6">
+      <p class="eyebrow">What link owners see</p>
+      <ul class="mt-4 space-y-2.5 font-mono text-sm text-ink">
+        <li>visit counts</li>
+        <li>daily unique visits</li>
+        <li>country codes</li>
+        <li>referrer hosts</li>
+        <li>browsers and device categories</li>
+      </ul>
+    </div>
+    <div class="card p-6">
+      <p class="eyebrow">What is never stored</p>
+      <ul class="mt-4 space-y-2.5 font-mono text-sm">
+        <li><span class="strike-tracker">raw IP addresses</span></li>
+        <li><span class="strike-tracker">full referrer URLs</span></li>
+        <li><span class="strike-tracker">raw user agents</span></li>
+        <li><span class="strike-tracker">cross-site identifiers</span></li>
+      </ul>
+      <p class="mt-4 text-sm leading-6 text-ink-muted">Read the details in the <%= link_to "privacy policy", "/privacy", class: "link" %>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-5 pb-16 sm:pb-20" aria-labelledby="features-heading">
   <h2 id="features-heading" class="sr-only">Features</h2>
-  <% [
-    ["01", "Own every address", "Use the primary domain or bring verified custom domains with safe fallbacks."],
-    ["02", "Measure less, learn more", "Daily rotating visitor digests make useful analytics possible without durable identity."],
-    ["03", "Built to move", "Export CSV, use the documented API, or self-host the whole Rails application."]
-  ].each do |number, title, description| %>
-    <article class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-      <p class="font-mono text-sm text-lime-300"><%= number %></p>
-      <h3 class="mt-8 text-xl font-semibold"><%= title %></h3>
-      <p class="mt-3 leading-7 text-slate-400"><%= description %></p>
-    </article>
-  <% end %>
+  <div class="grid gap-5 md:grid-cols-3">
+    <% [
+      ["01", "Bring your own domain", "Serve short links from a custom domain you control. Add it, verify it over DNS, and fall back safely to the primary domain."],
+      ["02", "Privacy-safe analytics", "Daily rotating visitor digests give you visit counts, referrers, and devices without durable identity."],
+      ["03", "CSV export and API", "Export your links as CSV, create them through the documented API, or self-host the whole Rails application."]
+    ].each do |number, title, description| %>
+      <article class="card p-6">
+        <p class="font-mono text-sm font-medium text-hyperlink"><%= number %></p>
+        <h3 class="mt-5 text-base font-semibold text-ink"><%= title %></h3>
+        <p class="mt-2 text-sm leading-6 text-ink-muted"><%= description %></p>
+      </article>
+    <% end %>
+  </div>
 </section>

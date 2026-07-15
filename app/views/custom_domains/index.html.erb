@@ -1,5 +1,22 @@
 <% content_for :title, "Custom domains · tinyslug" %>
 <section class="mx-auto max-w-5xl px-5 py-12">
-  <div class="flex items-end justify-between"><div><p class="text-sm font-medium text-lime-300">Routing</p><h1 class="mt-2 text-4xl font-bold tracking-tight">Custom domains</h1><p class="mt-3 text-slate-400">Verify ownership, route traffic, and configure safe fallbacks.</p></div><%= link_to "Add domain", new_custom_domain_path, class: "rounded-xl bg-lime-300 px-4 py-2.5 font-semibold text-slate-950 hover:bg-lime-200" %></div>
-  <div class="mt-10 space-y-3"><% if @custom_domains.any? %><% @custom_domains.each do |domain| %><article class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 class="font-mono text-lg"><%= domain.hostname %></h2><p class="mt-1 text-sm text-slate-400"><%= domain.status.humanize %><% if domain.last_checked_at %> · checked <%= time_ago_in_words(domain.last_checked_at) %> ago<% end %></p></div><div class="flex gap-2"><%= link_to "DNS setup", domain, class: "rounded-lg border border-white/10 px-3 py-2 text-sm hover:bg-white/10" %><%= link_to "Fallback", edit_custom_domain_path(domain), class: "rounded-lg border border-white/10 px-3 py-2 text-sm hover:bg-white/10" %></div></article><% end %><% else %><div class="rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center text-slate-400">No custom domains yet.</div><% end %></div>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p class="eyebrow">Routing</p><h1 class="mt-2 font-mono text-3xl font-semibold tracking-tight">Custom domains</h1><p class="mt-3 text-ink-muted">Verify ownership, route traffic, and configure safe fallbacks.</p></div><%= link_to "Add domain", new_custom_domain_path, class: "btn btn-primary" %></div>
+  <div class="mt-10 space-y-3">
+    <% if @custom_domains.any? %>
+      <% @custom_domains.each do |domain| %>
+        <article class="card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <h2 class="break-all font-mono text-lg text-ink"><%= domain.hostname %></h2>
+              <span class="badge <%= { "verified" => "bg-success-tint text-success", "pending" => "bg-caution-tint text-caution" }.fetch(domain.status, "bg-danger-tint text-danger") %>"><%= domain.status.humanize %></span>
+            </div>
+            <% if domain.last_checked_at %><p class="mt-1 text-sm text-ink-muted">Checked <%= time_ago_in_words(domain.last_checked_at) %> ago</p><% end %>
+          </div>
+          <div class="flex shrink-0 gap-2"><%= link_to "DNS setup", domain, class: "btn btn-secondary" %><%= link_to "Fallback", edit_custom_domain_path(domain), class: "btn btn-secondary" %></div>
+        </article>
+      <% end %>
+    <% else %>
+      <div class="rounded-[10px] border border-dashed border-line px-6 py-12 text-center"><p class="eyebrow">No custom domains yet</p><p class="mx-auto mt-3 max-w-md text-ink-muted">Add a domain to serve short links from your own hostname.</p><%= link_to "Add domain", new_custom_domain_path, class: "btn btn-primary mt-6" %></div>
+    <% end %>
+  </div>
 </section>

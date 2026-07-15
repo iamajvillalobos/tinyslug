@@ -1,11 +1,11 @@
 <% content_for :title, "#{@link.name} · tinyslug" %>
 <section class="mx-auto max-w-4xl px-5 py-12">
-  <%= link_to "← All links", links_path, class: "text-sm text-slate-400 hover:text-white" %>
-  <div class="mt-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-    <p class="text-sm font-medium text-lime-300"><%= @link.tracking_enabled? ? "Privacy-safe tracking enabled" : "Tracking disabled" %></p>
-    <h1 class="mt-2 text-4xl font-bold tracking-tight"><%= @link.name %></h1>
-    <p class="mt-4 break-all text-slate-400"><%= @link.destination_url %></p>
-    <div class="mt-8 rounded-2xl bg-black/20 p-5" data-controller="copy" data-copy-text-value="<%= @link.short_url %>"><p class="break-all font-mono text-lg text-lime-300"><%= @link.short_url %></p><button type="button" data-copy-target="button" data-action="copy#copy" class="mt-3 rounded-lg border border-white/10 px-3 py-2 text-sm hover:bg-white/10">Copy short URL</button></div>
-    <div class="mt-8 flex flex-wrap gap-3 text-sm"><%= link_to "Edit", edit_link_path(@link), class: "rounded-xl bg-lime-300 px-4 py-2.5 font-semibold text-slate-950 hover:bg-lime-200" %><%= link_to "Analytics", link_analytics_path(@link), class: "rounded-xl border border-white/15 px-4 py-2.5 hover:bg-white/10" %><%= link_to "Download QR (SVG)", qr_link_path(@link, format: :svg), class: "rounded-xl border border-white/15 px-4 py-2.5 hover:bg-white/10" %><%= link_to "Download QR (PNG)", qr_link_path(@link, format: :png), class: "rounded-xl border border-white/15 px-4 py-2.5 hover:bg-white/10" %><%= link_to "Export CSV", export_link_path(@link), class: "rounded-xl border border-white/15 px-4 py-2.5 hover:bg-white/10" %></div>
+  <%= link_to "← All links", links_path, class: "link text-sm" %>
+  <div class="card mt-6 p-6 sm:p-8">
+    <p class="eyebrow"><%= @link.tracking_enabled? ? "Privacy-safe tracking enabled" : "Tracking disabled" %></p>
+    <h1 class="mt-2 font-mono text-3xl font-semibold tracking-tight"><%= @link.name %></h1>
+    <p class="mt-4 break-all font-mono text-sm text-ink-muted"><%= @link.destination_url %></p>
+    <div class="mt-8 rounded-md border border-line bg-paper p-5" data-controller="copy" data-copy-text-value="<%= @link.short_url %>"><p class="break-all font-mono text-lg font-medium text-hyperlink"><%= @link.short_url %></p><button type="button" data-copy-target="button" data-action="copy#copy" class="btn btn-secondary mt-3">Copy short URL</button></div>
+    <div class="mt-8 flex flex-wrap gap-3 text-sm"><%= link_to "Edit", edit_link_path(@link), class: "btn btn-primary" %><%= link_to "Analytics", link_analytics_path(@link), class: "btn btn-secondary" %><%= link_to "Download QR (SVG)", qr_link_path(@link, format: :svg), class: "btn btn-secondary" %><%= link_to "Download QR (PNG)", qr_link_path(@link, format: :png), class: "btn btn-secondary" %><%= link_to "Export CSV", export_link_path(@link), class: "btn btn-secondary" %></div>
   </div>
 </section>
