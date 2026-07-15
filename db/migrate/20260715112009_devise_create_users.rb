@@ -43,14 +43,11 @@ class DeviseCreateUsers < ActiveRecord::Migration[8.1]
       t.references :user, null: false, index: { unique: true }, foreign_key: { on_delete: :cascade }
       t.string :first_name
       t.string :last_name
-      t.text :bio
       t.string :timezone, null: false, default: "UTC"
-      t.boolean :public_enabled, null: false, default: false
       t.timestamps
 
       t.check_constraint "char_length(first_name) <= 100", name: "profiles_first_name_length_check"
       t.check_constraint "char_length(last_name) <= 100", name: "profiles_last_name_length_check"
-      t.check_constraint "char_length(bio) <= 500", name: "profiles_bio_length_check"
     end
   end
 end

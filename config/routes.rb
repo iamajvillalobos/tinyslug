@@ -14,17 +14,7 @@ Rails.application.routes.draw do
       confirmation: "confirmation"
     }
   resource :dashboard, only: :show, controller: "dashboard"
-  resource :profile, only: %i[edit update] do
-    delete :avatar, action: :destroy_avatar
-  end
-  resources :profile_links, only: %i[create destroy] do
-    patch :move_up, on: :member
-    patch :move_down, on: :member
-  end
-  resources :social_links, only: %i[create destroy] do
-    patch :move_up, on: :member
-    patch :move_down, on: :member
-  end
+  resource :profile, only: %i[edit update]
   resources :api_tokens, only: %i[index create] do
     delete :revoke, on: :member
   end
@@ -51,8 +41,6 @@ Rails.application.routes.draw do
   root "pages#home"
   get "terms", to: "pages#terms"
   get "privacy", to: "pages#privacy"
-  get "u/:username", to: "public_profiles#show", as: :public_profile
-
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

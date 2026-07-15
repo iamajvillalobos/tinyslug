@@ -16,12 +16,6 @@ Confirmation and password reset require SMTP in production. Set `SMTP_ADDRESS`, 
 
 Use a dedicated sender/domain with SPF, DKIM, and DMARC. Verify a registration and password reset from the deployed host after changing SMTP configuration.
 
-## Active Storage
-
-Local disk is the credential-free default. Persist and back up `/rails/storage` when `ACTIVE_STORAGE_SERVICE=local`.
-
-For AWS S3 or a compatible service, set `ACTIVE_STORAGE_SERVICE=s3`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, and `S3_BUCKET`. Set `S3_ENDPOINT` and usually `S3_FORCE_PATH_STYLE=true` for compatible non-AWS services. Use a private bucket, server-side encryption, versioning, narrowly scoped credentials, and a lifecycle policy appropriate for deleted blobs.
-
 ## Web and workers
 
 Run the web process with `bin/rails server` (the container's default command) and at least one independent `bin/jobs` process. Solid Queue reads `config/recurring.yml` in production and schedules visit retention daily and custom-domain verification every 30 minutes.
@@ -47,14 +41,14 @@ Removing a custom domain returns its links to the primary host. Colliding slugs 
 
 ## Backups and restore
 
-Back up the primary PostgreSQL database with the provider's snapshot feature or `pg_dump --format=custom --no-owner --file=tinyslug.dump "$DATABASE_URL"`. Back up local Active Storage separately, or rely on S3 versioning/replication. Cache and Cable data are disposable; queue data should be included when pending jobs must survive a disaster.
+Back up the primary PostgreSQL database with the provider's snapshot feature or `pg_dump --format=custom --no-owner --file=tinyslug.dump "$DATABASE_URL"`. Cache and Cable data are disposable; queue data should be included when pending jobs must survive a disaster.
 
 Test restores regularly in an isolated environment:
 
-1. Provision empty databases and storage with no production network access.
+1. Provision empty databases with no production network access.
 2. Restore with `pg_restore --clean --if-exists --no-owner --dbname="$RESTORE_DATABASE_URL" tinyslug.dump`.
 3. Run `RAILS_ENV=production bin/rails db:prepare` against the restored database.
-4. Reconcile user, link, domain, visit, and attachment counts and sample short/public URLs.
+4. Reconcile user, link, domain, and visit counts and sample short URLs.
 5. Rotate secrets if the backup or credentials may have been exposed.
 
 Do not point a restore exercise at production. Record recovery-point and recovery-time objectives appropriate to the deployment.

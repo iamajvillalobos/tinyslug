@@ -37,13 +37,6 @@ class UserTest < ActiveSupport::TestCase
     assert_includes duplicate.errors[:username], "has already been taken"
   end
 
-  test "route usernames are reserved" do
-    user = User.new(email: "admin@example.com", username: "Admin", password: "password123")
-
-    assert_not user.valid?
-    assert_includes user.errors[:username], "is reserved"
-  end
-
   test "public shortener account cannot own a user" do
     account = Account.new(kind: :public_shortener, key: "public-shortener")
     user = User.new(account:, email: "internal@example.com", username: "internal", password: "password123")

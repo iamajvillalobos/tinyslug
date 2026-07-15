@@ -1,9 +1,0 @@
-alice_docs:
-  profile: alice
-  link: alice_docs
-  position: 0
-
-alice_custom:
-  profile: alice
-  link: alice_custom
-  position: 1

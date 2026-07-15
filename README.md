@@ -1,6 +1,6 @@
 # tinyslug
 
-tinyslug is a privacy-focused, self-hostable link manager built with Rails 8.1, Hotwire, Tailwind CSS, PostgreSQL, and Solid Queue. It provides short links, tags, QR codes, privacy-preserving analytics, custom domains, an authenticated API, and opt-in public profiles.
+tinyslug is a privacy-focused, self-hostable link manager built with Rails 8.1, Hotwire, Tailwind CSS, PostgreSQL, and Solid Queue. It provides short links, tags, QR codes, privacy-preserving analytics, custom domains, and an authenticated API.
 
 ## Requirements
 
@@ -49,9 +49,7 @@ Individual checks are available through `mise exec -- bin/rails test`, `mise exe
 
 `.env.example` documents every supported setting. Production requires `APP_HOST`, `DATABASE_URL`, `SECRET_KEY_BASE`, `VISITOR_DIGEST_SECRET`, `API_TOKEN_DIGEST_SECRET`, and `RATE_LIMIT_DIGEST_SECRET`. Each digest secret must be independent. Public shortening is disabled unless `PUBLIC_SHORTENER_ENABLED=true`.
 
-Public profiles use `/u/:username`; the prefix avoids ambiguity with the root-level `/:slug` redirect route.
-
-See `docs/operations.md` for deployment, SMTP/S3, custom-domain DNS/TLS, backups, and worker runbooks. `docs/routes.md` records every route area's authentication decision.
+See `docs/operations.md` for deployment, SMTP, custom-domain DNS/TLS, backups, and worker runbooks. `docs/routes.md` records every route area's authentication decision.
 
 ## Privacy
 

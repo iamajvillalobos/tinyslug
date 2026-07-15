@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_121000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_115500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,34 +22,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_121000) do
     t.index ["key"], name: "index_accounts_on_key", unique: true
     t.check_constraint "key::text = lower(key::text) AND char_length(key::text) > 0", name: "accounts_key_normalized_check"
     t.check_constraint "kind = ANY (ARRAY[0, 1])", name: "accounts_kind_check"
-  end
-
-  create_table "active_storage_attachments", force: :cascade do |t|
-    t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.bigint "record_id", null: false
-    t.string "record_type", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
-  end
-
-  create_table "active_storage_blobs", force: :cascade do |t|
-    t.bigint "byte_size", null: false
-    t.string "checksum"
-    t.string "content_type"
-    t.datetime "created_at", null: false
-    t.string "filename", null: false
-    t.string "key", null: false
-    t.text "metadata"
-    t.string "service_name", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
-  end
-
-  create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
-    t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "api_tokens", force: :cascade do |t|
@@ -111,45 +83,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_121000) do
     t.check_constraint "source = ANY (ARRAY[0, 1, 2])", name: "links_source_check"
   end
 
-  create_table "profile_links", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.bigint "link_id", null: false
-    t.integer "position", null: false
-    t.bigint "profile_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["link_id"], name: "index_profile_links_on_link_id"
-    t.index ["profile_id", "link_id"], name: "index_profile_links_on_profile_id_and_link_id", unique: true
-    t.index ["profile_id", "position"], name: "index_profile_links_on_profile_id_and_position"
-    t.index ["profile_id"], name: "index_profile_links_on_profile_id"
-    t.check_constraint "\"position\" >= 0", name: "profile_links_position_check"
-  end
-
   create_table "profiles", force: :cascade do |t|
-    t.text "bio"
     t.datetime "created_at", null: false
     t.string "first_name"
     t.string "last_name"
-    t.boolean "public_enabled", default: false, null: false
     t.string "timezone", default: "UTC", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id", unique: true
-    t.check_constraint "char_length(bio) <= 500", name: "profiles_bio_length_check"
     t.check_constraint "char_length(first_name::text) <= 100", name: "profiles_first_name_length_check"
     t.check_constraint "char_length(last_name::text) <= 100", name: "profiles_last_name_length_check"
-  end
-
-  create_table "social_links", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "label", null: false
-    t.integer "position", null: false
-    t.bigint "profile_id", null: false
-    t.datetime "updated_at", null: false
-    t.text "url", null: false
-    t.index ["profile_id", "position"], name: "index_social_links_on_profile_id_and_position"
-    t.index ["profile_id"], name: "index_social_links_on_profile_id"
-    t.check_constraint "\"position\" >= 0", name: "social_links_position_check"
-    t.check_constraint "char_length(label::text) >= 1 AND char_length(label::text) <= 40", name: "social_links_label_length_check"
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -216,16 +159,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_121000) do
     t.check_constraint "visitor_digest::text ~ '^[a-f0-9]{64}$'::text", name: "visits_digest_format_check"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "api_tokens", "accounts", on_delete: :cascade
   add_foreign_key "custom_domains", "accounts", on_delete: :cascade
   add_foreign_key "links", "accounts", on_delete: :cascade
   add_foreign_key "links", "custom_domains", on_delete: :nullify
-  add_foreign_key "profile_links", "links", on_delete: :cascade
-  add_foreign_key "profile_links", "profiles", on_delete: :cascade
   add_foreign_key "profiles", "users", on_delete: :cascade
-  add_foreign_key "social_links", "profiles", on_delete: :cascade
   add_foreign_key "taggings", "links", on_delete: :cascade
   add_foreign_key "taggings", "tags", on_delete: :cascade
   add_foreign_key "tags", "accounts", on_delete: :cascade

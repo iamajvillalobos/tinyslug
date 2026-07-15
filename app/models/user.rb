@@ -1,9 +1,4 @@
 class User < ApplicationRecord
-  RESERVED_USERNAMES = %w[
-    admin analytics api assets dashboard domains login logout privacy public rails
-    register settings shorten support terms tokens up
-  ].freeze
-
   devise :confirmable, :database_authenticatable, :recoverable, :registerable,
     :rememberable, :validatable
 
@@ -17,8 +12,7 @@ class User < ApplicationRecord
     presence: true,
     length: { in: 3..30 },
     format: { with: /\A[a-z0-9_]+\z/ },
-    uniqueness: { case_sensitive: false },
-    exclusion: { in: RESERVED_USERNAMES }
+    uniqueness: { case_sensitive: false }
   validates_associated :account, :profile
   validate :account_must_be_personal
 

@@ -25,9 +25,6 @@ class AccessControlTest < ActionDispatch::IntegrationTest
       assert_response :success, "Expected #{path} to be public"
     end
 
-    get public_profile_path("missing")
-    assert_response :not_found
-
     post api_v1_links_path, params: { link: { destination_url: "https://example.com" } }, as: :json
     assert_response :unauthorized
   end

@@ -22,15 +22,11 @@ gem "tailwindcss-rails"
 gem "jbuilder"
 
 # Product features
-gem "active_storage_validations", "~> 3.0"
 gem "chartkick", "~> 5.2"
 gem "device_detector", "~> 1.1"
 gem "devise", "~> 5.0"
 gem "pagy", "~> 43.6"
 gem "rqrcode", "~> 3.2"
-
-# Optional S3-compatible Active Storage service
-gem "aws-sdk-s3", "~> 1.227", require: false
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -51,9 +47,6 @@ gem "kamal", require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
-
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
