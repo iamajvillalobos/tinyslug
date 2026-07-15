@@ -34,6 +34,7 @@
         <div class="flex items-center gap-4 text-sm text-slate-300">
           <% if user_signed_in? %>
             <%= link_to "Dashboard", dashboard_path, class: "transition hover:text-white" %>
+            <%= link_to "Links", links_path, class: "transition hover:text-white" %>
             <%= link_to "Settings", edit_profile_path, class: "transition hover:text-white" %>
             <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "rounded-lg border border-white/15 px-3 py-2 font-medium text-white transition hover:bg-white/10" %>
           <% else %>
@@ -45,16 +46,7 @@
       </nav>
     </header>
 
-    <% if notice %>
-      <div class="mx-auto mt-5 max-w-6xl px-5" role="status">
-        <p class="rounded-xl border border-lime-300/30 bg-lime-300/10 px-4 py-3 text-sm text-lime-100"><%= notice %></p>
-      </div>
-    <% end %>
-    <% if alert %>
-      <div class="mx-auto mt-5 max-w-6xl px-5" role="alert">
-        <p class="rounded-xl border border-rose-300/30 bg-rose-300/10 px-4 py-3 text-sm text-rose-100"><%= alert %></p>
-      </div>
-    <% end %>
+    <div id="flash-messages"><%= render "shared/flash" %></div>
 
     <main>
       <%= yield %>

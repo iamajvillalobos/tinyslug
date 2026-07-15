@@ -1,0 +1,6 @@
+<% if link.errors.any? %>
+  <div class="rounded-xl border border-rose-300/30 bg-rose-300/10 p-4 text-sm text-rose-100" role="alert">
+    <p class="font-semibold">Please review this link:</p>
+    <ul class="mt-2 list-disc space-y-1 pl-5"><% link.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
+  </div>
+<% end %>

@@ -17,6 +17,15 @@ Rails.application.routes.draw do
   resource :profile, only: %i[edit update] do
     delete :avatar, action: :destroy_avatar
   end
+  resources :links do
+    get :export, on: :collection, action: :export_all
+    member do
+      get :export
+      get :qr
+    end
+  end
+  get "shorten", to: "public/links#new", as: :public_shortener
+  post "shorten", to: "public/links#create"
   root "pages#home"
   get "terms", to: "pages#terms"
   get "privacy", to: "pages#privacy"
@@ -28,4 +37,6 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+
+  get ":slug", to: "redirects#show", as: :short_link
 end

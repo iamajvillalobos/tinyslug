@@ -1,0 +1,2 @@
+<% content_for :title, "Edit #{@link.name} · tinyslug" %>
+<section class="mx-auto max-w-3xl px-5 py-12"><p class="text-sm font-medium text-lime-300">Links</p><h1 class="mt-2 text-4xl font-bold tracking-tight">Edit link</h1><%= turbo_frame_tag dom_id(@link), class: "mt-10 block rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" do %><%= render "form", link: @link %><% end %></section>

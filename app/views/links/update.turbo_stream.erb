@@ -1,0 +1,6 @@
+<% if @link.errors.any? %>
+  <%= turbo_stream.replace dom_id(@link) do %><%= turbo_frame_tag dom_id(@link), class: "block rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" do %><%= render "form", link: @link %><% end %><% end %>
+<% else %>
+  <%= turbo_stream.replace @link %>
+  <%= turbo_stream.update "flash-messages", partial: "shared/flash" %>
+<% end %>

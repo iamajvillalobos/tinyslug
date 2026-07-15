@@ -1,0 +1,31 @@
+<%= form_with model: link, class: "space-y-5" do |form| %>
+  <%= render "links/errors", link: %>
+
+  <div>
+    <%= form.label :destination_url, "Destination URL", class: "text-sm font-medium" %>
+    <%= form.url_field :destination_url, required: true, placeholder: "https://example.com/article", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none transition focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div><%= form.label :name, class: "text-sm font-medium" %><%= form.text_field :name, maxlength: 255, placeholder: "Optional label", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none transition focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+    <div><%= form.label :slug, class: "text-sm font-medium" %><%= form.text_field :slug, maxlength: 64, placeholder: "Generated when blank", pattern: "[a-z0-9]+(?:-[a-z0-9]+)*", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 font-mono outline-none transition focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <%= form.label :tags, class: "text-sm font-medium" %>
+      <%= form.text_field :tags, value: link.tags.map(&:name).join(", "), placeholder: "docs, launch", class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none transition focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %>
+      <p class="mt-2 text-xs text-slate-500">Separate tags with commas.</p>
+    </div>
+    <% if @custom_domains.any? %>
+      <div><%= form.label :custom_domain_id, "Domain", class: "text-sm font-medium" %><%= form.collection_select :custom_domain_id, @custom_domains, :id, :hostname, { include_blank: "Primary domain" }, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none transition focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+    <% end %>
+  </div>
+
+  <label class="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 p-4">
+    <%= form.check_box :tracking_enabled, class: "mt-1 size-4 rounded border-white/20 bg-slate-900 text-lime-300 focus:ring-lime-300" %>
+    <span><span class="block font-medium">Privacy-safe analytics</span><span class="mt-1 block text-sm text-slate-400">Respect DNT/GPC and store no raw IP address or user agent.</span></span>
+  </label>
+
+  <%= form.submit link.persisted? ? "Save link" : "Create short link", class: "rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 transition hover:bg-lime-200 disabled:cursor-wait disabled:opacity-60", data: { turbo_submits_with: link.persisted? ? "Saving…" : "Creating…" } %>
+<% end %>

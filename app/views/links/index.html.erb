@@ -1,0 +1,32 @@
+<% content_for :title, "Links · tinyslug" %>
+<section class="mx-auto max-w-6xl px-5 py-12">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div><p class="text-sm font-medium text-lime-300">Workspace</p><h1 class="mt-2 text-4xl font-bold tracking-tight">Links</h1><p class="mt-3 text-slate-400">Shorten, organize, export, and share.</p></div>
+    <%= link_to "Export CSV", export_links_path, class: "rounded-xl border border-white/15 px-4 py-2.5 text-sm font-medium hover:bg-white/10" %>
+  </div>
+
+  <%= turbo_frame_tag "link_form", class: "mt-10 block rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8" do %>
+    <h2 class="mb-6 text-xl font-semibold">Create a short link</h2>
+    <%= render "form", link: @link %>
+  <% end %>
+
+  <%= form_with url: links_path, method: :get, data: { controller: "search", turbo_frame: "link_results" }, class: "mt-10 grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]" do |form| %>
+    <%= form.search_field :query, value: params[:query], placeholder: "Search name, URL, or slug", aria: { label: "Search links" }, data: { action: "input->search#schedule" }, class: "rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300" %>
+    <%= form.select :tag, options_for_select([["All tags", ""]] + @tags.map { |tag| [tag.name, tag.name] }, params[:tag]), {}, data: { action: "change->search#schedule" }, aria: { label: "Filter by tag" }, class: "rounded-xl border border-white/15 bg-slate-900 px-4 py-3" %>
+    <%= form.select :sort, options_for_select([["Newest", "newest"], ["Oldest", "oldest"]], params[:sort]), {}, data: { action: "change->search#schedule" }, aria: { label: "Sort links" }, class: "rounded-xl border border-white/15 bg-slate-900 px-4 py-3" %>
+    <%= form.submit "Filter", class: "rounded-xl border border-white/15 px-4 py-3 font-medium hover:bg-white/10" %>
+  <% end %>
+
+  <%= turbo_frame_tag "link_results" do %>
+    <div id="links-list" class="mt-6 space-y-3">
+      <% if @links.any? %><%= render @links %><% else %><div class="rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center text-slate-400">No links match this view.</div><% end %>
+    </div>
+    <% if @pagy.last > 1 %>
+      <nav class="mt-6 flex items-center justify-center gap-4 text-sm" aria-label="Link pages">
+        <% if @pagy.previous %><%= link_to "← Previous", links_path(request.query_parameters.merge(page: @pagy.previous)), class: "rounded-lg border border-white/10 px-3 py-2 hover:bg-white/10" %><% end %>
+        <span class="text-slate-400">Page <%= @pagy.page %> of <%= @pagy.last %></span>
+        <% if @pagy.next %><%= link_to "Next →", links_path(request.query_parameters.merge(page: @pagy.next)), class: "rounded-lg border border-white/10 px-3 py-2 hover:bg-white/10" %><% end %>
+      </nav>
+    <% end %>
+  <% end %>
+</section>
