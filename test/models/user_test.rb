@@ -22,8 +22,10 @@ class UserTest < ActiveSupport::TestCase
     user.build_account(kind: :personal)
     user.build_profile(timezone: "Mars/Olympus")
 
-    assert_no_difference([ "User.count", "Account.count", "Profile.count" ]) do
-      assert_not user.save
+    assert_no_enqueued_emails do
+      assert_no_difference([ "User.count", "Account.count", "Profile.count" ]) do
+        assert_not user.save
+      end
     end
     assert_includes user.errors.attribute_names, :profile
   end

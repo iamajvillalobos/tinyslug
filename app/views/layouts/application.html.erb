@@ -31,9 +31,16 @@
           <span class="grid size-8 place-items-center rounded-xl bg-lime-300 font-black text-slate-950">t</span>
           tinyslug
         <% end %>
-        <div class="flex items-center gap-5 text-sm text-slate-300">
-          <%= link_to "Privacy", privacy_path, class: "transition hover:text-white" %>
-          <%= link_to "Terms", terms_path, class: "transition hover:text-white" %>
+        <div class="flex items-center gap-4 text-sm text-slate-300">
+          <% if user_signed_in? %>
+            <%= link_to "Dashboard", dashboard_path, class: "transition hover:text-white" %>
+            <%= link_to "Settings", edit_profile_path, class: "transition hover:text-white" %>
+            <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "rounded-lg border border-white/15 px-3 py-2 font-medium text-white transition hover:bg-white/10" %>
+          <% else %>
+            <%= link_to "Privacy", privacy_path, class: "hidden transition hover:text-white sm:inline" %>
+            <%= link_to "Log in", new_user_session_path, class: "transition hover:text-white" %>
+            <%= link_to "Create account", new_user_registration_path, class: "rounded-lg bg-lime-300 px-3 py-2 font-semibold text-slate-950 transition hover:bg-lime-200" %>
+          <% end %>
         </div>
       </nav>
     </header>
@@ -55,7 +62,7 @@
 
     <footer class="mx-auto mt-24 flex max-w-6xl flex-col gap-3 border-t border-white/10 px-5 py-8 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
       <p>Short links without long-lived visitor identities.</p>
-      <p>Open source under the MIT License.</p>
+      <div class="flex gap-4"><%= link_to "Terms", terms_path, class: "hover:text-white" %><%= link_to "Privacy", privacy_path, class: "hover:text-white" %></div>
     </footer>
   </body>
 </html>

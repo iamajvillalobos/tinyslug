@@ -3,8 +3,6 @@ class Profile < ApplicationRecord
 
   belongs_to :user, inverse_of: :profile
   has_one_attached :avatar
-  has_many :profile_links, -> { order(:position) }, dependent: :destroy
-  has_many :social_links, -> { order(:position) }, dependent: :destroy
 
   validates :first_name, :last_name, length: { maximum: 100 }
   validates :bio, length: { maximum: 500 }

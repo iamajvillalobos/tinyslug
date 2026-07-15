@@ -1,26 +1,15 @@
-<h2>Log in</h2>
+<% content_for :title, "Log in · tinyslug" %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
+<section class="mx-auto max-w-md px-5 py-16">
+  <p class="text-sm font-medium text-lime-300">Welcome back</p>
+  <h1 class="mt-2 text-4xl font-bold tracking-tight">Log in</h1>
 
-  <div class="field">
-    <p><%= f.label :password %></p>
-    <p><%= f.password_field :password, autocomplete: "current-password" %></p>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <p><%= f.check_box :remember_me %></p>
-      <p><%= f.label :remember_me %></p>
-    </div>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "mt-8 space-y-5" }) do |form| %>
+    <div><%= form.label :email, class: "text-sm font-medium" %><%= form.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+    <div><%= form.label :password, class: "text-sm font-medium" %><%= form.password_field :password, autocomplete: "current-password", required: true, class: "mt-2 w-full rounded-xl border border-white/15 bg-slate-900 px-4 py-3 outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/20" %></div>
+    <% if devise_mapping.rememberable? %><label class="flex items-center gap-2 text-sm text-slate-300"><%= form.check_box :remember_me, class: "size-4 rounded border-white/20 bg-slate-900 text-lime-300 focus:ring-lime-300" %> Remember me</label><% end %>
+    <%= form.submit "Log in", class: "w-full rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 hover:bg-lime-200 disabled:opacity-60", data: { turbo_submits_with: "Logging in…" } %>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+  <div class="mt-6 flex justify-between text-sm"><%= link_to "Forgot password?", new_password_path(resource_name), class: "text-slate-400 hover:text-white" %><%= link_to "Resend confirmation", new_confirmation_path(resource_name), class: "text-slate-400 hover:text-white" %></div>
+</section>

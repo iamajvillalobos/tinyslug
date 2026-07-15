@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users,
     path: "",
+    controllers: {
+      passwords: "users/passwords",
+      registrations: "users/registrations",
+      sessions: "users/sessions"
+    },
     path_names: {
       sign_in: "login",
       sign_out: "logout",
@@ -8,6 +13,10 @@ Rails.application.routes.draw do
       password: "password",
       confirmation: "confirmation"
     }
+  resource :dashboard, only: :show, controller: "dashboard"
+  resource :profile, only: %i[edit update] do
+    delete :avatar, action: :destroy_avatar
+  end
   root "pages#home"
   get "terms", to: "pages#terms"
   get "privacy", to: "pages#privacy"

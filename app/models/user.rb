@@ -24,6 +24,12 @@ class User < ApplicationRecord
 
   private
 
+  def send_devise_notification(notification, *args)
+    ActiveRecord.after_all_transactions_commit do
+      devise_mailer.send(notification, self, *args).deliver_later
+    end
+  end
+
   def build_personal_records
     build_account(kind: :personal) unless account
     build_profile unless profile
