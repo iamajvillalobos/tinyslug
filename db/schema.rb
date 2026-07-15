@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_113000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_114500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_113000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "api_tokens", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "last_used_at"
+    t.string "name", null: false
+    t.datetime "revoked_at"
+    t.string "token_digest", null: false
+    t.string "token_prefix", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "revoked_at"], name: "index_api_tokens_on_account_id_and_revoked_at"
+    t.index ["account_id"], name: "index_api_tokens_on_account_id"
+    t.index ["token_digest"], name: "index_api_tokens_on_token_digest", unique: true
+    t.check_constraint "char_length(name::text) >= 1 AND char_length(name::text) <= 80", name: "api_tokens_name_length_check"
+    t.check_constraint "char_length(token_prefix::text) >= 4 AND char_length(token_prefix::text) <= 20", name: "api_tokens_prefix_length_check"
+    t.check_constraint "token_digest::text ~ '^[a-f0-9]{64}$'::text", name: "api_tokens_digest_format_check"
   end
 
   create_table "custom_domains", force: :cascade do |t|
@@ -155,6 +172,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_113000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "api_tokens", "accounts", on_delete: :cascade
   add_foreign_key "custom_domains", "accounts", on_delete: :cascade
   add_foreign_key "links", "accounts", on_delete: :cascade
   add_foreign_key "links", "custom_domains", on_delete: :nullify

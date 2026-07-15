@@ -40,8 +40,9 @@
     <%= form.submit "Save profile", class: "rounded-xl bg-lime-300 px-5 py-3 font-semibold text-slate-950 transition hover:bg-lime-200 disabled:cursor-wait disabled:opacity-60", data: { turbo_submits_with: "Saving…" } %>
   <% end %>
 
-  <div class="mt-8 grid gap-5 sm:grid-cols-2">
+  <div class="mt-8 grid gap-5 sm:grid-cols-3">
     <%= link_to "Account and password settings", edit_user_registration_path, class: "rounded-2xl border border-white/10 bg-white/[0.03] p-5 font-medium transition hover:bg-white/[0.06]" %>
     <%= link_to "Back to dashboard", dashboard_path, class: "rounded-2xl border border-white/10 bg-white/[0.03] p-5 font-medium transition hover:bg-white/[0.06]" %>
+    <%= link_to "API tokens", api_tokens_path, class: "rounded-2xl border border-white/10 bg-white/[0.03] p-5 font-medium transition hover:bg-white/[0.06]" %>
   </div>
 </section>

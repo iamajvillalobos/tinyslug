@@ -27,4 +27,12 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
   end
+
+  test "API documentation renders configured examples" do
+    get api_docs_url
+
+    assert_response :success
+    assert_select "h1", "Create a short link"
+    assert_includes response.body, "http://localhost:3000/api/v1/links"
+  end
 end

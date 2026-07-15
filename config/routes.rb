@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   resource :profile, only: %i[edit update] do
     delete :avatar, action: :destroy_avatar
   end
+  resources :api_tokens, only: %i[index create] do
+    delete :revoke, on: :member
+  end
   resources :links do
     get :export, on: :collection, action: :export_all
     member do
@@ -26,6 +29,12 @@ Rails.application.routes.draw do
   end
   get "shorten", to: "public/links#new", as: :public_shortener
   post "shorten", to: "public/links#create"
+  get "api/docs", to: "pages#api_docs", as: :api_docs
+  namespace :api do
+    namespace :v1 do
+      resources :links, only: :create
+    end
+  end
   root "pages#home"
   get "terms", to: "pages#terms"
   get "privacy", to: "pages#privacy"

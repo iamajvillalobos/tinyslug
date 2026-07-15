@@ -1,0 +1,18 @@
+<% content_for :title, "API documentation · tinyslug" %>
+<article class="mx-auto max-w-4xl px-5 py-16">
+  <p class="text-sm font-medium text-lime-300">API v1</p><h1 class="mt-2 text-4xl font-bold tracking-tight">Create a short link</h1><p class="mt-4 max-w-2xl leading-7 text-slate-300">Send a bearer token created in Settings. A newly created link returns <code>201</code>; an unnamed matching link returns <code>200</code>.</p>
+  <h2 class="mt-10 text-xl font-semibold">POST /api/v1/links</h2>
+  <pre class="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-black/30 p-5 text-sm leading-6 text-slate-200"><code>curl --request POST <%= Rails.configuration.x.app_protocol %>://<%= Rails.configuration.x.app_host %>/api/v1/links \
+  --header 'Authorization: Bearer YOUR_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "link": {
+      "destination_url": "https://example.com/article",
+      "name": "Example article",
+      "slug": "example-article",
+      "tracking_enabled": true,
+      "tags": ["docs", "example"]
+    }
+  }'</code></pre>
+  <p class="mt-6 text-slate-400">Validation errors return <code>422</code>. Missing, malformed, unknown, and revoked bearer tokens return <code>401</code>.</p>
+</article>

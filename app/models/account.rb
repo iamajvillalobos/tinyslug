@@ -5,6 +5,7 @@ class Account < ApplicationRecord
   has_many :links, dependent: :destroy
   has_many :custom_domains, dependent: :destroy
   has_many :tags, dependent: :destroy
+  has_many :api_tokens, dependent: :destroy
 
   before_validation :generate_key, on: :create
   before_validation :normalize_key
