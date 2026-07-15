@@ -25,7 +25,7 @@ mise exec -- bin/setup
 mise exec -- bin/dev
 ```
 
-For native PostgreSQL, ensure `pg_isready` succeeds and that your operating-system user can create the `tinyslug_development` and `tinyslug_test` databases. `DATABASE_URL` and `TEST_DATABASE_URL` can override socket-based defaults.
+For native PostgreSQL, ensure `pg_isready` succeeds and that your operating-system user can create the `tinyslug_development`, `tinyslug_development_queue`, and `tinyslug_test` databases. `DATABASE_URL`, `QUEUE_DATABASE_URL`, and `TEST_DATABASE_URL` can override socket-based defaults.
 
 Open <http://localhost:3000>. Development email is written to `tmp/mails`; open the newest HTML part to follow a confirmation or password-reset link.
 
