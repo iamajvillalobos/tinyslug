@@ -1,0 +1,4 @@
+# No visit fixtures are defined, but this file must exist so fixture
+# loading clears the visits table. Otherwise seeded visits (db/seeds.rb
+# via bin/setup in CI, where RAILS_ENV=test) outlive fixture setup and
+# violate the links foreign key once fixture links replace seeded links.
