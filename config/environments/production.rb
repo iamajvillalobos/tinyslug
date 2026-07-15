@@ -21,8 +21,8 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # Local storage is credential-free; select `s3` explicitly for S3-compatible storage.
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE", "local").to_sym
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
@@ -53,9 +53,9 @@ Rails.application.configure do
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  smtp_address = ENV["SMTP_ADDRESS"].presence
+  config.action_mailer.perform_deliveries = smtp_address.present?
+  config.action_mailer.raise_delivery_errors = smtp_address.present?
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = {
@@ -63,14 +63,18 @@ Rails.application.configure do
     protocol: ENV.fetch("APP_PROTOCOL", "https")
   }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
+  if smtp_address
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: smtp_address,
+      port: Integer(ENV.fetch("SMTP_PORT", 587)),
+      user_name: ENV["SMTP_USERNAME"].presence,
+      password: ENV["SMTP_PASSWORD"].presence,
+      domain: ENV["SMTP_DOMAIN"].presence || ENV["APP_HOST"],
+      authentication: ENV.fetch("SMTP_AUTHENTICATION", "plain").to_sym,
+      enable_starttls_auto: ENV.fetch("SMTP_ENABLE_STARTTLS_AUTO", "true") == "true"
+    }.compact
+  end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

@@ -6,6 +6,10 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", /Small links/
+    assert_equal "DENY", response.headers["X-Frame-Options"]
+    assert_equal "strict-origin-when-cross-origin", response.headers["Referrer-Policy"]
+    assert_includes response.headers["Permissions-Policy"], "geolocation=()"
+    assert_includes response.headers["Content-Security-Policy"], "default-src 'self'"
   end
 
   test "terms render" do

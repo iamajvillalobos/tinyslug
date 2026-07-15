@@ -3,11 +3,14 @@ require "test_helper"
 module Links
   class CreateTest < ActiveSupport::TestCase
     test "creates a generated slug and normalized tags" do
-      result = Links::Create.call(
-        account: accounts(:alice),
-        attributes: { destination_url: "https://example.com/new", tags: [ " News ", "product" ] },
-        source: :dashboard
-      )
+      result = nil
+      assert_event_reported("tinyslug.link.created", payload: { account_id: accounts(:alice).id, source: :dashboard }) do
+        result = Links::Create.call(
+          account: accounts(:alice),
+          attributes: { destination_url: "https://example.com/new", tags: [ " News ", "product" ] },
+          source: :dashboard
+        )
+      end
 
       assert result.created?
       assert_match(/\A[#{Regexp.escape(Link::SLUG_ALPHABET)}]{8}\z/, result.link.slug)

@@ -3,14 +3,18 @@ require "test_helper"
 module Links
   class ResolveTest < ActiveSupport::TestCase
     test "resolves primary links with normalized host and slug" do
-      outcome = Links::Resolve.call(host: "LOCALHOST:3000", slug: "DOCS-LINK", primary_host: "localhost:3000")
+      outcome = assert_queries_count(1) do
+        Links::Resolve.call(host: "LOCALHOST:3000", slug: "DOCS-LINK", primary_host: "localhost:3000")
+      end
 
       assert outcome.found?
       assert_equal links(:alice_docs), outcome.link
     end
 
     test "resolves links only on verified custom domains" do
-      found = Links::Resolve.call(host: "go.alice.test", slug: "custom-link", primary_host: "localhost:3000")
+      found = assert_queries_count(2) do
+        Links::Resolve.call(host: "go.alice.test", slug: "custom-link", primary_host: "localhost:3000")
+      end
       missing = Links::Resolve.call(host: "pending.alice.test", slug: "custom-link", primary_host: "localhost:3000")
 
       assert found.found?

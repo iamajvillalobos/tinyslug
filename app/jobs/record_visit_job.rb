@@ -9,15 +9,17 @@ class RecordVisitJob < ApplicationJob
 
     return if Visit.exists?(event_key: attributes.fetch(:event_key))
 
-    Visit.create!(event_key: attributes.fetch(:event_key)) do |visit|
-      visit.link = link
-      visit.visitor_digest = attributes.fetch(:visitor_digest)
-      visit.browser = attributes[:browser]
-      visit.device_type = attributes[:device_type]
-      visit.country_code = attributes[:country_code]
-      visit.referrer_host = attributes[:referrer_host]
-      visit.occurred_at = attributes.fetch(:occurred_at)
+    visit = Visit.create!(event_key: attributes.fetch(:event_key)) do |record|
+      record.link = link
+      record.visitor_digest = attributes.fetch(:visitor_digest)
+      record.browser = attributes[:browser]
+      record.device_type = attributes[:device_type]
+      record.country_code = attributes[:country_code]
+      record.referrer_host = attributes[:referrer_host]
+      record.occurred_at = attributes.fetch(:occurred_at)
     end
+    Rails.event.notify("tinyslug.visit.recorded", visit_id: visit.id, link_id: link.id)
+    visit
   rescue ActiveRecord::RecordNotUnique
     Visit.find_by!(event_key: attributes.fetch(:event_key))
   end

@@ -29,6 +29,9 @@ gem "devise", "~> 5.0"
 gem "pagy", "~> 43.6"
 gem "rqrcode", "~> 3.2"
 
+# Optional S3-compatible Active Storage service
+gem "aws-sdk-s3", "~> 1.227", require: false
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 

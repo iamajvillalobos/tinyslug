@@ -22,7 +22,7 @@ module Links
       requested_slug = attributes[:slug].present?
       custom_domain_id = attributes.delete(:custom_domain_id)
       custom_domain = resolve_custom_domain(custom_domain_id)
-      return Result.new(invalid_link, :invalid) if custom_domain_id.present? && !custom_domain
+      return finish(Result.new(invalid_link, :invalid)) if custom_domain_id.present? && !custom_domain
 
       if source == :public_shortener
         attributes.delete(:custom_domain_id)
@@ -35,15 +35,27 @@ module Links
 
       unless requested_name || requested_slug
         existing = duplicate_scope(custom_domain).find_by(destination_url: attributes[:destination_url])
-        return Result.new(existing, :reused) if existing
+        return finish(Result.new(existing, :reused)) if existing
       end
 
-      create_link(custom_domain:, tag_names:, generated_slug: !requested_slug)
+      finish(create_link(custom_domain:, tag_names:, generated_slug: !requested_slug))
     end
 
     private
 
     attr_reader :account, :attributes, :source
+
+    def finish(result)
+      Rails.event.notify(
+        "tinyslug.link.#{result.status}",
+        account_id: account.id,
+        link_id: result.link.id,
+        source: source,
+        custom_domain_id: result.link.custom_domain_id,
+        error_fields: result.link.errors.attribute_names
+      )
+      result
+    end
 
     def resolve_custom_domain(id)
       return if id.blank?

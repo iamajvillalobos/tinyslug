@@ -63,6 +63,13 @@ module CustomDomains
         verified_at: errors.empty? ? (custom_domain.verified_at || now) : nil,
         last_checked_at: now
       )
+      Rails.event.notify(
+        "tinyslug.custom_domain.checked",
+        account_id: custom_domain.account_id,
+        custom_domain_id: custom_domain.id,
+        status: custom_domain.status,
+        error_codes: errors.map { |error| error.parameterize(separator: "_") }
+      )
       Result.new(custom_domain, errors.freeze)
     end
   end

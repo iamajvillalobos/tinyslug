@@ -13,8 +13,8 @@
       <% if link.tags.any? %><div class="mt-3 flex flex-wrap gap-2"><% link.tags.each do |tag| %><span class="rounded-full bg-white/[0.06] px-2.5 py-1 text-xs text-slate-300"><%= tag.name %></span><% end %></div><% end %>
     </div>
     <div class="flex shrink-0 flex-wrap gap-2 text-sm">
-      <%= link_to "Details", link, class: "rounded-lg border border-white/10 px-3 py-2 hover:bg-white/10" %>
-      <%= link_to "Edit", edit_link_path(link), class: "rounded-lg border border-white/10 px-3 py-2 hover:bg-white/10" %>
+      <%= link_to "Details", link, data: { turbo_frame: "_top" }, class: "rounded-lg border border-white/10 px-3 py-2 hover:bg-white/10" %>
+      <%= link_to "Edit", edit_link_path(link), data: { turbo_frame: "_top" }, class: "rounded-lg border border-white/10 px-3 py-2 hover:bg-white/10" %>
       <%= button_to "Delete", link, method: :delete, data: { turbo_confirm: "Delete this short link?" }, class: "rounded-lg border border-rose-300/20 px-3 py-2 text-rose-200 hover:bg-rose-300/10" %>
     </div>
   </div>

@@ -4,7 +4,9 @@ class RecordVisitJobTest < ActiveJob::TestCase
   test "persists a derived payload idempotently" do
     payload = derived_payload
 
-    assert_difference("Visit.count", 1) { RecordVisitJob.perform_now(payload) }
+    assert_event_reported("tinyslug.visit.recorded", payload: { link_id: links(:alice_docs).id }) do
+      assert_difference("Visit.count", 1) { RecordVisitJob.perform_now(payload) }
+    end
     assert_no_difference("Visit.count") { RecordVisitJob.perform_now(payload.deep_stringify_keys) }
 
     visit = Visit.find_by!(event_key: payload[:event_key])

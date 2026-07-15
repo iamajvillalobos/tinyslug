@@ -18,7 +18,7 @@ mise install
 docker compose up -d postgres
 ```
 
-Copy `.env.example` to `.env` if you need to override local defaults, then prepare the application:
+Use `.env.example` as the environment-variable reference when overriding local defaults, then prepare the application:
 
 ```sh
 mise exec -- bin/setup
@@ -27,7 +27,9 @@ mise exec -- bin/dev
 
 For native PostgreSQL, ensure `pg_isready` succeeds and that your operating-system user can create the `tinyslug_development` and `tinyslug_test` databases. `DATABASE_URL` and `TEST_DATABASE_URL` can override socket-based defaults.
 
-Open <http://localhost:3000>. Development email is written to the Rails log and can be inspected with the standard mail preview workflow.
+Open <http://localhost:3000>. Development email is written to `tmp/mails`; open the newest HTML part to follow a confirmation or password-reset link.
+
+Optional idempotent demo data is available with `mise exec -- bin/rails db:seed`. It creates `demo@tinyslug.local` with the local-only password `demo-password-change-me` (override it with `SEED_DEMO_PASSWORD`).
 
 ## Validation
 
@@ -47,7 +49,9 @@ Individual checks are available through `mise exec -- bin/rails test`, `mise exe
 
 `.env.example` documents every supported setting. Production requires `APP_HOST`, `DATABASE_URL`, `SECRET_KEY_BASE`, `VISITOR_DIGEST_SECRET`, `API_TOKEN_DIGEST_SECRET`, and `RATE_LIMIT_DIGEST_SECRET`. Each digest secret must be independent. Public shortening is disabled unless `PUBLIC_SHORTENER_ENABLED=true`.
 
-See `docs/operations.md` for deployment, custom-domain DNS/TLS, backups, and worker runbooks.
+Public profiles use `/u/:username`; the prefix avoids ambiguity with the root-level `/:slug` redirect route.
+
+See `docs/operations.md` for deployment, SMTP/S3, custom-domain DNS/TLS, backups, and worker runbooks. `docs/routes.md` records every route area's authentication decision.
 
 ## Privacy
 
