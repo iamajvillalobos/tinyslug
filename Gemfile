@@ -3,11 +3,11 @@ source "https://rubygems.org"
 ruby "4.0.6"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.7"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -25,7 +25,7 @@ gem "jbuilder"
 gem "chartkick", "~> 5.2"
 gem "device_detector", "~> 1.1"
 gem "devise", "~> 5.0"
-gem "pagy", "~> 43.6"
+gem "pagy", "~> 43.7"
 gem "rqrcode", "~> 3.2"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
